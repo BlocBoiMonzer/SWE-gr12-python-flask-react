@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/python-flask-react-monzer.iml" filepath="$PROJECT_DIR$/.idea/python-flask-react-monzer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/SWE-gr12-python-flask-react.iml" filepath="$PROJECT_DIR$/.idea/SWE-gr12-python-flask-react.iml" />
     </modules>
   </component>
 </project>

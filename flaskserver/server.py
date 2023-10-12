@@ -12,6 +12,10 @@ def members():
 
 # Begynn med å lage en funksjon for å legge til members
 
+@app.route("/select-tours")
+def select_tours():
+    return select_tours
+
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -15,7 +15,7 @@ def members():
 
 @app.route("/select_tours")
 def select_tours():
-    return render_template("select_tours.html")
+    return render_template("selecttours.html")
 
 
 @app.route("/home")
@@ -40,6 +40,12 @@ def user():
         return f"<h1>{user}</h1>"
     else:
         return redirect(url_for("login"))
+
+
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    return redirect(url_for("login"))
 
 
 if __name__ == "__main__":

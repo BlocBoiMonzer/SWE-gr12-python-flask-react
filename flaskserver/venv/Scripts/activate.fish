@@ -57,7 +57,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV 'C:\Users\monze\Documents\Coding\SWE-gr12-python-flask-react\venv'
+set -gx VIRTUAL_ENV 'C:\Users\abdul\OneDrive\Documents\software_engineering\SWE-gr12-python-flask-react\flaskserver\venv'
 
 # https://github.com/fish-shell/fish-shell/issues/436 altered PATH handling
 if test (echo $FISH_VERSION | head -c 1) -lt 3

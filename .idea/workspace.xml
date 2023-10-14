@@ -3,17 +3,7 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
-  <component name="ChangeListManager">
-    <list default="true" id="b10f4bd6-6d40-4d3c-83ff-524c4bd822c5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/flaskserver/templates/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flaskserver/templates/base.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flaskserver/templates/login.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flaskserver/templates/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/SWE-gr12-python-flask-react.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SWE-gr12-python-flask-react.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flaskserver/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/flaskserver/server.py" afterDir="false" />
-    </list>
+  <component name="ChangeListManager"
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,14 +31,6 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "devBranch",
-    "last_opened_file_path": "C:/Users/monze/Documents/Coding/SWE-gr12-python-flask-react",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -66,5 +48,16 @@
       <updated>1696503734109</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

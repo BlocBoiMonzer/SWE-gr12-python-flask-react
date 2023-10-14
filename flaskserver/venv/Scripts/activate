@@ -44,7 +44,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV='C:\Users\monze\Documents\Coding\SWE-gr12-python-flask-react\venv'
+VIRTUAL_ENV='C:\Users\abdul\OneDrive\Documents\software_engineering\SWE-gr12-python-flask-react\flaskserver\venv'
 if ([ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]) && $(command -v cygpath &> /dev/null) ; then
     VIRTUAL_ENV=$(cygpath -u "$VIRTUAL_ENV")
 fi

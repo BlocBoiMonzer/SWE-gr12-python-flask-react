@@ -1,9 +1,11 @@
 from flask import Flask, render_template, url_for, request, redirect, session
 from flask_cors import CORS
+from datetime import timedelta
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 app.secret_key = "hadi"
+app.permanent_session_lifetime = timedelta(minutes=5)
 
 # Read Members API route
 @app.route("/members")
@@ -18,7 +20,7 @@ def select_tours():
     return render_template("selecttours.html")
 
 
-@app.route("/home")
+@app.route("/")
 def home():
     return render_template("home.html")
 
@@ -26,6 +28,7 @@ def home():
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
+        session.permanent = True
         user = request.form["username"]
         session["user"] = user
         return redirect(url_for("user"))

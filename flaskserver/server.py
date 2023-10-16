@@ -1,11 +1,11 @@
-from flask import Flask, render_template, url_for, request, redirect, session
+from flask import Flask, render_template, url_for, request, redirect, session, flash
 from flask_cors import CORS
 from datetime import timedelta
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 app.secret_key = "hadi"
-app.permanent_session_lifetime = timedelta(minutes=5)
+app.permanent_session_lifetime = timedelta(days=5)
 
 # Read Members API route
 @app.route("/members")
@@ -31,6 +31,7 @@ def login():
         session.permanent = True
         user = request.form["username"]
         session["user"] = user
+        flash("you have been logged inn!", "info")
         return redirect(url_for("user"))
     else:
         return render_template("login.html")
@@ -48,6 +49,7 @@ def user():
 @app.route("/logout")
 def logout():
     session.pop("user", None)
+    flash("you have been logged out!", "info")
     return redirect(url_for("login"))
 
 

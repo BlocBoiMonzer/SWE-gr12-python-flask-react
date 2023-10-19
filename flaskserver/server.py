@@ -34,6 +34,10 @@ def login():
         flash("you have been logged inn!", "info")
         return redirect(url_for("user"))
     else:
+        if "user" in session:
+            flash("Already logged in!")
+            return redirect(url_for("user"))
+
         return render_template("login.html")
 
 
@@ -41,8 +45,9 @@ def login():
 def user():
     if "user" in session:
         user = session["user"]
-        return f"<h1>{user}</h1>"
+        return render_template("user.html", user=user)
     else:
+        flash("you are not logged in!")
         return redirect(url_for("login"))
 
 

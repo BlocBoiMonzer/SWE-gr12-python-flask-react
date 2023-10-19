@@ -22,7 +22,7 @@ def select_tours():
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+    return render_template("base.html")
 
 
 @app.route("/login", methods=["POST", "GET"])

@@ -18,10 +18,14 @@ def members():
 
 # Begynn med å lage en funksjon for å legge til members
 
+
 db = SQLAlchemy(app)
 
+
 class users(db.Model):
-    
+    _id = db.Column("Id", db.Integer, primary_key=True)
+    name = db.Column("Name", db.String(100))
+
 
 @app.route("/select_tours")
 def select_tours():

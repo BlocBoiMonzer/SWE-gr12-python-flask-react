@@ -23,11 +23,18 @@ db = SQLAlchemy(app)
 
 
 class users(db.Model):
-    _id = db.Column("Id", db.Integer, primary_key=True)
+    id = db.Column("Id", db.Integer, primary_key=True)
     firstname = db.Column("FirstName", db.String(50))
     lastname = db.Column("LastName", db.String(50))
     phonenumber = db.Column("PhoneNumber", db.Integer(12))
     adresse = db.Column("Adresse", db.String(100))
+
+    def __init__(self, id, firstname, lastname, phonenumber, adresse):
+        self.id = id
+        self.firstname = firstname
+        self.lastname = lastname
+        self.phonenumber = phonenumber
+        self.adresse = adresse
 
 
 @app.route("/select_tours")
@@ -84,4 +91,5 @@ def logout():
 
 
 if __name__ == "__main__":
+    db.create_all()
     app.run(debug=True)

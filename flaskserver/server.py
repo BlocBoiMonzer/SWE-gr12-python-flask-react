@@ -53,7 +53,14 @@ def login():
         session.permanent = True
         user = request.form["username"]
         session["user"] = user
-        flash("you have been logged inn!", "info")
+        user_found = users.query.filter_by(id=user).first()
+        if user_found:
+            session["email"] = user_found.email
+        else:
+            usr = users(user, "")
+            db.session.add(usr)
+            db.commit()
+        flash("you have been logged inn!")
         return redirect(url_for("user"))
     else:
         if "user" in session:

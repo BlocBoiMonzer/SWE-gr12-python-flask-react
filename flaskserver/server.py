@@ -26,7 +26,7 @@ class users(db.Model):
     id = db.Column("Id", db.Integer, primary_key=True)
     firstname = db.Column("FirstName", db.String(50))
     lastname = db.Column("LastName", db.String(50))
-    phonenumber = db.Column("PhoneNumber", db.Integer(12))
+    phonenumber = db.Column("PhoneNumber", db.Integer)
     adresse = db.Column("Adresse", db.String(100))
 
     def __init__(self, id, firstname, lastname, phonenumber, adresse):

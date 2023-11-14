@@ -4,6 +4,7 @@ from flask_login import UserMixin, LoginManager, login_user, login_required, log
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length
+from datetime import timedelta
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Hadi'
@@ -11,11 +12,14 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tours.db'
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
+app.permanent_session_lifetime = timedelta(days=5)
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(200))
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    password = db.Column(db.String(15))
+
 
 class Tour(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -23,19 +27,23 @@ class Tour(db.Model):
     description = db.Column(db.Text)
     price = db.Column(db.Float)
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
 
 class RegistrationForm(FlaskForm):
     username = StringField('Brukernavn', validators=[DataRequired()])
     password = PasswordField('Passord', validators=[DataRequired(), Length(min=6)])
     submit = SubmitField('Registrer')
 
+
 class LoginForm(FlaskForm):
     username = StringField('Brukernavn', validators=[DataRequired()])
     password = PasswordField('Passord', validators=[DataRequired()])
     submit = SubmitField('Logg inn')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -46,6 +54,7 @@ def register():
         db.session.commit()
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -59,11 +68,13 @@ def login():
             flash('Feil pÃ¥loggingsinformasjon')
     return render_template('login.html', form=form)
 
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
     with app.app_context():

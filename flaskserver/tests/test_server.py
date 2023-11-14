@@ -12,6 +12,7 @@ def test_members_route(client):
     assert rv.status_code == 200
     assert rv.get_json() == {"members": ["Member1", "Member2", "Member3", "Member4", "Ali"]}
 
+
 class User:
     def __init__(self, username):
         self.username = username

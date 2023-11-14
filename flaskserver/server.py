@@ -1,46 +1,81 @@
-from flask import Flask, render_template, url_for, request, redirect, session
-from flask_cors import CORS
+from flask import Flask, render_template, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired, Email, Length
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 app = Flask(__name__)
-CORS(app)  # This will enable CORS for all routes
-app.secret_key = "hadi"
-
-# Read Members API route
-@app.route("/members")
-def members():
-    return {"members": ["Member1", "Member2", "Member3", "Member4", "Ali", "Hadi"]}
+app.config['SECRET_KEY'] = 'Hadi'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tours.db'
+db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 
-# Begynn med å lage en funksjon for å legge til members
-
-@app.route("/select_tours")
-def select_tours():
-    return render_template("select_tours.html")
-
-
-@app.route("/home")
-def home():
-    return render_template("home.html")
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(200))
 
 
-@app.route("/login", methods=["POST", "GET"])
+class Tour(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
+    price = db.Column(db.Float)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+class RegistrationForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Passord', validators=[DataRequired(), Length(min=6)])
+    submit = SubmitField('Registrer')
+
+
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Passord', validators=[DataRequired()])
+    submit = SubmitField('Logg inn')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(email=form.email.data, password=form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('login'))
+    return render_template('register.html', form=form)
+
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == "POST":
-        user = request.form["username"]
-        session["user"] = user
-        return redirect(url_for("user"))
-    else:
-        return render_template("login.html")
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and user.password == form.password.data:
+            login_user(user)
+            return redirect(url_for('index'))
+        else:
+            flash('Feil påloggingsinformasjon')
+    return render_template('login.html', form=form)
 
 
-@app.route("/user")
-def user():
-    if "user" in session:
-        user = session["user"]
-        return f"<h1>{user}</h1>"
-    else:
-        return redirect(url_for("login"))
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    db.create_all()
     app.run(debug=True)

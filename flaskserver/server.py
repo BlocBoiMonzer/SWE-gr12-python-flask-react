@@ -36,7 +36,7 @@ def select_tours():
 
 @app.route("/")
 def home():
-    return render_template("base.html")
+    return render_template("index.html")
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -93,5 +93,6 @@ def logout():
 
 
 if __name__ == "__main__":
-    db.create_all()
-    app.run(debug=True)
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True, port=3000)

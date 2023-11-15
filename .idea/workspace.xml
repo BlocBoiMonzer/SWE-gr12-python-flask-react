@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e72ce9e2-88d1-4974-abcc-bb21c12023d7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/SWE-gr12-python-flask-react.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SWE-gr12-python-flask-react.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flaskserver/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/flaskserver/server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flaskserver/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/flaskserver/templates/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-    </list>
+    <list default="true" id="e72ce9e2-88d1-4974-abcc-bb21c12023d7" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -34,15 +27,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "GrBranch",
-    "last_opened_file_path": "C:/Users/abdul/OneDrive/Documents/software_engineering/SWE-gr12-python-flask-react",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;GrBranch&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/abdul/OneDrive/Documents/software_engineering/SWE-gr12-python-flask-react&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\monze\Documents\Coding\SWE-gr12-python-flask-react\flaskserver" />

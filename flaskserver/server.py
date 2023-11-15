@@ -29,9 +29,9 @@ class users(db.Model):
         self.adresse = adresse
 
 
-@app.route("/select_tours")
+@app.route("/tours")
 def select_tours():
-    return render_template("selecttours.html")
+    return render_template("tours.html")
 
 
 @app.route("/")

@@ -1,71 +1,97 @@
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, url_for, request, redirect, session, flash
+from flask_cors import CORS
+from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Length
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'Hadi'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tours.db'
+CORS(app)
+app.secret_key = "hadi"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.permanent_session_lifetime = timedelta(days=5)
+
+
 db = SQLAlchemy(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
 
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(200))
 
-class Tour(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text)
-    price = db.Column(db.Float)
+class users(db.Model):
+    id = db.Column("Id", db.Integer, primary_key=True)
+    firstname = db.Column("FirstName", db.String(50))
+    lastname = db.Column("LastName", db.String(50))
+    phonenumber = db.Column("PhoneNumber", db.Integer)
+    adresse = db.Column("Adresse", db.String(100))
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+    def __init__(self, id, firstname, lastname, phonenumber, adresse):
+        self.id = id
+        self.firstname = firstname
+        self.lastname = lastname
+        self.phonenumber = phonenumber
+        self.adresse = adresse
 
-class RegistrationForm(FlaskForm):
-    username = StringField('Brukernavn', validators=[DataRequired()])
-    password = PasswordField('Passord', validators=[DataRequired(), Length(min=6)])
-    submit = SubmitField('Registrer')
 
-class LoginForm(FlaskForm):
-    username = StringField('Brukernavn', validators=[DataRequired()])
-    password = PasswordField('Passord', validators=[DataRequired()])
-    submit = SubmitField('Logg inn')
+@app.route("/select_tours")
+def select_tours():
+    return render_template("selecttours.html")
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        user = User(username=form.username.data, password=form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        return redirect(url_for('login'))
-    return render_template('register.html', form=form)
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route("/")
+def home():
+    return render_template("base.html")
+
+
+@app.route("/login", methods=["POST", "GET"])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user and user.password == form.password.data:
-            login_user(user)
-            return redirect(url_for('index'))
+    if request.method == "POST":
+        session.permanent = True
+        user = request.form["username"]
+        session["user"] = user
+        user_found = users.query.filter_by(id=user).first()
+        if user_found:
+            session["email"] = user_found.email
         else:
-            flash('Feil pÃ¥loggingsinformasjon')
-    return render_template('login.html', form=form)
+            usr = users(user, "")
+            db.session.add(usr)
+            db.session.commit()
+        flash("you have been logged inn!")
+        return redirect(url_for("user"))
+    else:
+        if "user" in session:
+            flash("Already logged in!")
+            return redirect(url_for("user"))
 
-@app.route('/logout')
-@login_required
+        return render_template("login.html")
+
+
+@app.route("/user", methods=["POST", "GET"])
+def user():
+    email = None
+    if "user" in session:
+        user = session["user"]
+
+        if request.method == "POST":
+            email = request.form["email"]
+            session["email"] = email
+            user_found = users.query.filter_by(id=user).first()
+            user_found.email = email
+            db.session.commit()
+            flash("Email was saved!")
+        else:
+            if "email" in session:
+                email = session["email"]
+        return render_template("user.html", email=email, user=user)
+    else:
+        flash("you are not logged in!")
+        return redirect(url_for("login"))
+
+
+@app.route("/logout")
 def logout():
-    logout_user()
-    return redirect(url_for('index'))
+    session.pop("user", None)
+    session.pop("email", None)
+    flash("you have been logged out!", "info")
+    return redirect(url_for("login"))
 
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True, port=3000)
+
+if __name__ == "__main__":
+    db.create_all()
+    app.run(debug=True)

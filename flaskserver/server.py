@@ -20,13 +20,15 @@ class users(db.Model):
     lastname = db.Column("LastName", db.String(50))
     phonenumber = db.Column("PhoneNumber", db.Integer)
     adresse = db.Column("Adresse", db.String(100))
+    email = db.Column("Email", db.String(100))
 
-    def __init__(self, id, firstname, lastname, phonenumber, adresse):
+    def __init__(self, id, firstname, lastname, phonenumber, adresse, email):
         self.id = id
         self.firstname = firstname
         self.lastname = lastname
         self.phonenumber = phonenumber
         self.adresse = adresse
+        self.email = email
 
 
 @app.route("/tours")
@@ -37,6 +39,29 @@ def select_tours():
 @app.route("/")
 def home():
     return render_template("index.html")
+
+
+@app.route("/register", methods=["POST", "GET"])
+def register():
+    if request.method == "POST":
+        firstname = request.form["firstname"]
+        lastname = request.form["lastname"]
+        phonenumber = request.form["phonenumber"]
+        adresse = request.form["adresse"]
+        email = request.form["email"]
+
+        if users.query.filter_by(email=email).first():
+            flash("Email is already registered. Please choose a different email.")
+            return redirect(url_for("register"))
+
+        user = users(firstname=firstname, lastname=lastname, phonenumber=phonenumber, adresse=adresse, email=email)
+        db.session.add(user)
+        db.session.commit()
+
+        flash("Registration successful! You can now log in.")
+        return redirect(url_for("login"))
+
+    return render_template("register.html")
 
 
 @app.route("/login", methods=["POST", "GET"])

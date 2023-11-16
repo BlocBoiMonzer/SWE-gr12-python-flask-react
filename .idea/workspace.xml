@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e72ce9e2-88d1-4974-abcc-bb21c12023d7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flaskserver/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/flaskserver/server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flaskserver/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/flaskserver/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flaskserver/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/flaskserver/templates/register.html" afterDir="false" />
-    </list>
+
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -55,6 +50,14 @@
       <option name="presentableId" value="Default" />
       <updated>1696503734109</updated>
     </task>
+    <task id="LOCAL−00001" summary="Oppdaterte html filer">
+      <option name="closed" value="true" />
+      <created>1699995228897</created>
+      <option name="number" value="LOCAL−00001" />
+      <option name="presentableId" value="LOCAL−00001" />
+      <updated>1699995228897</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -67,5 +70,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Oppdaterte html filer" />
+    <option name="LAST_COMMIT_MESSAGE" value="Oppdaterte html filer" />
   </component>
 </project>

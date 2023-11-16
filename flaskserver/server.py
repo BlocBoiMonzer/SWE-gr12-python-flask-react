@@ -16,47 +16,80 @@ db = SQLAlchemy(app)
 
 class users(db.Model):
     id = db.Column("Id", db.Integer, primary_key=True)
-    firstname = db.Column("FirstName", db.String(50))
-    lastname = db.Column("LastName", db.String(50))
-    phonenumber = db.Column("PhoneNumber", db.Integer)
-    adresse = db.Column("Adresse", db.String(100))
+    firstname = db.Column("firstName", db.String(50))
+    lastname = db.Column("lastName", db.String(50))
+    phonenumber = db.Column("phoneNumber", db.Integer)
+    address = db.Column("address", db.String(100))
+    email = db.Column("email", db.String(100))
+    username = db.Column("username", db.String(50), unique=True, nullable=False)
+    password = db.Column("password", db.String(100), nullable=False)
 
-    def __init__(self, id, firstname, lastname, phonenumber, adresse):
+    def __init__(self, id, firstname, lastname, phonenumber, address, email, username, password):
         self.id = id
         self.firstname = firstname
         self.lastname = lastname
         self.phonenumber = phonenumber
-        self.adresse = adresse
+        self.address = address
+        self.email = email
+        self.username = username
+        self.password = password
 
 
-@app.route("/select_tours")
+@app.route("/tours")
 def select_tours():
-    return render_template("selecttours.html")
+    return render_template("tours.html")
 
 
 @app.route("/")
 def home():
-    return render_template("base.html")
+    return render_template("index.html")
+
+
+@app.route("/register", methods=["POST", "GET"])
+def register():
+    if request.method == "POST":
+        firstname = request.form["firstname"]
+        lastname = request.form["lastname"]
+        phonenumber = request.form["phonenumber"]
+        address = request.form["address"]
+        email = request.form["email"]
+        username = request.form["username"]
+        password = request.form["password"]
+
+        if users.query.filter_by(email=email).first():
+            flash("Email is already registered. Please choose a different email.")
+            return redirect(url_for("register"))
+
+        user = users(firstname=firstname, lastname=lastname, phonenumber=phonenumber, address=address,
+                     email=email, username=username, password=password)
+
+        db.session.add(user)
+        db.session.commit()
+
+        flash("Registration successful! You can now log in.")
+        return redirect(url_for("login"))
+
+    return render_template("register.html")
 
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
         session.permanent = True
-        user = request.form["username"]
-        session["user"] = user
-        user_found = users.query.filter_by(id=user).first()
-        if user_found:
-            session["email"] = user_found.email
+        username = request.form["username"]
+        password = request.form["password"]
+        user = users.query.filter_by(username=username, password=password).first()
+
+        if user:
+            session["user"] = username
+            flash("Du har blitt logget inn!")
+            return redirect(url_for("user"))
         else:
-            usr = users(user, "")
-            db.session.add(usr)
-            db.session.commit()
-        flash("you have been logged inn!")
-        return redirect(url_for("user"))
+            flash("Feil brukernavn eller passord. Prøv igjen.", "error")
+            return redirect(url_for("login"))
     else:
         if "user" in session:
-            flash("Already logged in!")
+            flash("Allerede logget inn!")
             return redirect(url_for("user"))
 
         return render_template("login.html")
@@ -93,5 +126,6 @@ def logout():
 
 
 if __name__ == "__main__":
-    db.create_all()
-    app.run(debug=True)
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True, port=3000)

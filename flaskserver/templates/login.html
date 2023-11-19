@@ -89,7 +89,7 @@
     </form>
 
     {% if "user" in session %}
-        <p>You are already logged in as {{ session["user"] }}. <a href="{{ url_for('user') }}">Go to User Page</a></p>
+        <p>You are already logged in as {{ session["user"] }}. <a href="{{ url_for('index') }}">Go to Home Page</a></p>
     {% endif %}
 </body>
 </html>

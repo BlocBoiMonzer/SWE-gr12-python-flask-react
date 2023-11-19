@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 CORS(app)
 app.secret_key = "hadi"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.permanent_session_lifetime = timedelta(days=5)
 
@@ -15,7 +15,7 @@ db = SQLAlchemy(app)
 
 
 class users(db.Model):
-    id = db.Column("Id", db.Integer, primary_key=True)
+    ID = db.Column("ID", db.Integer, primary_key=True, autoincrement=True)
     firstname = db.Column("firstName", db.String(50))
     lastname = db.Column("lastName", db.String(50))
     phonenumber = db.Column("phoneNumber", db.Integer)
@@ -24,8 +24,7 @@ class users(db.Model):
     username = db.Column("username", db.String(50), unique=True, nullable=False)
     password = db.Column("password", db.String(100), nullable=False)
 
-    def __init__(self, id, firstname, lastname, phonenumber, address, email, username, password):
-        self.id = id
+    def __init__(self, firstname, lastname, phonenumber, address, email, username, password):
         self.firstname = firstname
         self.lastname = lastname
         self.phonenumber = phonenumber
@@ -83,14 +82,14 @@ def login():
         if user:
             session["user"] = username
             flash("Du har blitt logget inn!")
-            return redirect(url_for("user"))
+            return redirect(url_for("index"))
         else:
             flash("Feil brukernavn eller passord. Prøv igjen.", "error")
-            return redirect(url_for("login"))
+            return redirect(url_for("index"))
     else:
         if "user" in session:
             flash("Allerede logget inn!")
-            return redirect(url_for("user"))
+            return redirect(url_for("login"))
 
         return render_template("login.html")
 
@@ -117,7 +116,7 @@ def user():
         return redirect(url_for("login"))
 
 
-@app.route("/logout")
+@app.route("/index")
 def logout():
     session.pop("user", None)
     session.pop("email", None)

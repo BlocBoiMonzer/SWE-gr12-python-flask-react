@@ -1,50 +1,50 @@
 import pytest
+from flask import Flask, session
+from sqlalchemy.testing import db
+
 from flaskserver.server import app
+
 
 @pytest.fixture
 def client():
     app.config['TESTING'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+    app.config['WTF_CSRF_ENABLED'] = False
+
     with app.test_client() as client:
+        with app.app_context():
+            db.create_all()
         yield client
 
-def test_members_route(client):
-    rv = client.get('/members')
-    assert rv.status_code == 200
-    assert rv.get_json() == {"members": ["Member1", "Member2", "Member3", "Member4", "Ali"]}
+
+def test_register(client):
+    response = client.post('/register', data={
+        'firstname': 'John',
+        'lastname': 'Doe',
+        'phonenumber': '123456789',
+        'address': '123 Main St',
+        'email': 'john.doe@example.com',
+        'username': 'johndoe',
+        'password': 'password123'
+    })
+
+    assert b'Registration successful!' in response.data
 
 
-class User:
-    def __init__(self, username):
-        self.username = username
-        self.selected_trip = None
-        self.selected_payment_method = None
+def test_login(client):
+    client.post('/register', data={
+        'firstname': 'Test',
+        'lastname': 'User',
+        'phonenumber': '987654321',
+        'address': '456 Oak St',
+        'email': 'test.user@example.com',
+        'username': 'testuser',
+        'password': 'testpassword'
+    })
 
+    response = client.post('/login', data={
+        'username': 'testuser',
+        'password': 'testpassword'
+    }, follow_redirects=True)
 
-def choose_trip(user, trip_id):
-    user.selected_trip = trip_id
-
-
-def choose_payment_method(user, payment_method):
-    user.selected_payment_method = payment_method
-
-
-def test_user_initialization():
-    username = "Hadi"
-    user = User(username)
-    assert user.username == username
-    assert user.selected_trip is None
-    assert user.selected_payment_method is None
-
-
-def test_choose_trip():
-    user = User("Hadi")
-    trip_id = 12
-    choose_trip(user, trip_id)
-    assert user.selected_trip == trip_id
-
-
-def test_choose_payment_method():
-    user = User("Hadi")
-    payment_method = "vipps"
-    choose_payment_method(user, payment_method)
-    assert user.selected_payment_method == payment_method
+    assert b'Logged in!' in response.data

@@ -116,7 +116,7 @@ def user():
         return redirect(url_for("login"))
 
 
-@app.route("/logout")
+@app.route("/index")
 def logout():
     session.pop("user", None)
     session.pop("email", None)

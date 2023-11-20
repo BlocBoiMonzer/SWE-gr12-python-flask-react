@@ -84,7 +84,8 @@
         {% endif %}
     {% endwith %}
 
-    <form method="post" action="{{ url_for('register') }}">
+    <!-- Skjema for å registrere som bruker -->
+<form method="post" action="{{ url_for('register') }}">
     <label for="firstname">First Name:</label>
     <input type="text" id="firstname" name="firstname" required>
 
@@ -106,9 +107,10 @@
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required>
 
-    <button type="submit">Register</button>
+    <button type="submit" name="role" value="user">Registrer som Bruker</button>
 </form>
 
-    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+
+    <p>Klikk her for å gå tilbake til <a href="{{ url_for('home') }}">hjemmesiden</a>.</p>
 </body>
 </html>

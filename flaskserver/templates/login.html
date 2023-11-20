@@ -91,5 +91,7 @@
     {% if "user" in session %}
         <p>You are already logged in as {{ session["user"] }}. <a href="{{ url_for('user') }}">Go to User Page</a></p>
     {% endif %}
+
+    <p>Klikk her for å gå tilbake til <a href="{{ url_for('home') }}">hjemmesiden</a>.</p>
 </body>
 </html>

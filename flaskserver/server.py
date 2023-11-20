@@ -1,31 +1,32 @@
 from flask import Flask, render_template, url_for, request, redirect, session, flash
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_cors import CORS
 from datetime import timedelta
-from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 CORS(app)
-app.secret_key = "hadi"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.secret_key = "hadi"
 app.permanent_session_lifetime = timedelta(days=5)
 
-
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
 
 
 class users(db.Model):
     id = db.Column("Id", db.Integer, primary_key=True)
     firstname = db.Column("firstName", db.String(50))
     lastname = db.Column("lastName", db.String(50))
-    phonenumber = db.Column("phoneNumber", db.Integer)
+    phonenumber = db.Column("phoneNumber", db.Integer, unique=True, nullable=False)
     address = db.Column("address", db.String(100))
-    email = db.Column("email", db.String(100))
+    email = db.Column("email", db.String(100), unique=True, nullable=False)
     username = db.Column("username", db.String(50), unique=True, nullable=False)
     password = db.Column("password", db.String(100), nullable=False)
 
-    def __init__(self, id, firstname, lastname, phonenumber, address, email, username, password):
-        self.id = id
+    def __init__(self, firstname, lastname, phonenumber, address, email, username, password):
         self.firstname = firstname
         self.lastname = lastname
         self.phonenumber = phonenumber
@@ -33,6 +34,7 @@ class users(db.Model):
         self.email = email
         self.username = username
         self.password = password
+
 
 
 @app.route("/tours")
@@ -58,7 +60,7 @@ def register():
 
         if users.query.filter_by(email=email).first():
             flash("Email is already registered. Please choose a different email.")
-            return redirect(url_for("register"))
+            return redirect(url_for("register.html"))
 
         user = users(firstname=firstname, lastname=lastname, phonenumber=phonenumber, address=address,
                      email=email, username=username, password=password)
@@ -67,9 +69,10 @@ def register():
         db.session.commit()
 
         flash("Registration successful! You can now log in.")
-        return redirect(url_for("login"))
+        return redirect(url_for("login.html"))
 
-    return render_template("register.html")
+    return render_template("register")
+
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -82,48 +85,43 @@ def login():
 
         if user:
             session["user"] = username
-            flash("Du har blitt logget inn!")
-            return redirect(url_for("user"))
+            return redirect(url_for("user.html"))
         else:
             flash("Feil brukernavn eller passord. Prøv igjen.", "error")
-            return redirect(url_for("login"))
+            return redirect(url_for("login.html"))
     else:
         if "user" in session:
             flash("Allerede logget inn!")
-            return redirect(url_for("user"))
+            return redirect(url_for("user.html"))
 
         return render_template("login.html")
 
 
-@app.route("/user", methods=["POST", "GET"])
-def user():
-    email = None
-    if "user" in session:
-        user = session["user"]
-
-        if request.method == "POST":
-            email = request.form["email"]
-            session["email"] = email
-            user_found = users.query.filter_by(id=user).first()
-            user_found.email = email
-            db.session.commit()
-            flash("Email was saved!")
-        else:
-            if "email" in session:
-                email = session["email"]
-        return render_template("user.html", email=email, user=user)
-    else:
-        flash("you are not logged in!")
-        return redirect(url_for("login"))
+@app.route("/register_user", methods=["POST", "GET"])
+def register_user():
+    if request.method == "POST":
+        # Logikk for å registrere en ny bruker
+        # ...
+        return redirect(url_for("register_user"))  # Omdiriger tilbake til registreringssiden
+    return render_template("register")
 
 
-@app.route("/logout")
+@app.route("/logout", methods=["POST", "GET"])
 def logout():
     session.pop("user", None)
     session.pop("email", None)
-    flash("you have been logged out!", "info")
-    return redirect(url_for("login"))
+    flash("Du har blitt logget ut", "info")
+    return redirect(url_for("login.html"))
 
+@app.route("/create_tour", methods=["POST"])
+def create_tour():
+    if request.method == "POST":
+        destination = request.form.get("destination")
+        date = request.form.get("date")
+        description = request.form.get("description")
+        flash("Reisen til {} er blitt opprettet!".format(destination))
+
+        return redirect(url_for('tours.html'))  # Erstatt 'tours_page' med riktig rute for å vise reiser
 
 if __name__ == "__main__":
     with app.app_context():

@@ -5,17 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c0a112ff-d040-451d-8ed0-316c4a3e4ff9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/flaskserver/templates/admin.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flaskserver/templates/tours.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flaskserver/templates/user.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/SWE-gr12-python-flask-react.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SWE-gr12-python-flask-react.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flaskserver/instance/tours.db" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/flaskserver/instance/users.sqlite3" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/flaskserver/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/flaskserver/server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flaskserver/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/flaskserver/templates/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flaskserver/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/flaskserver/templates/register.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

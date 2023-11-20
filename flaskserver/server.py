@@ -60,7 +60,7 @@ def register():
 
         if users.query.filter_by(email=email).first():
             flash("Email is already registered. Please choose a different email.")
-            return redirect(url_for("register.html"))
+            return redirect(url_for("register"))
 
         user = users(firstname=firstname, lastname=lastname, phonenumber=phonenumber, address=address,
                      email=email, username=username, password=password)
@@ -69,9 +69,18 @@ def register():
         db.session.commit()
 
         flash("Registration successful! You can now log in.")
-        return redirect(url_for("login.html"))
+        return redirect(url_for("login"))
 
-    return render_template("register")
+    return render_template("register.html")
+
+@app.route("/user")
+def user():
+    if "user" in session:
+        return render_template("user.html", user=session["user"])
+    else:
+        flash("Du er ikke logget inn!")
+        return redirect(url_for("login"))
+
 
 
 
@@ -85,14 +94,14 @@ def login():
 
         if user:
             session["user"] = username
-            return redirect(url_for("user.html"))
+            return redirect(url_for("user"))
         else:
             flash("Feil brukernavn eller passord. Prøv igjen.", "error")
-            return redirect(url_for("login.html"))
+            return redirect(url_for("login"))
     else:
         if "user" in session:
             flash("Allerede logget inn!")
-            return redirect(url_for("user.html"))
+            return redirect(url_for("user"))
 
         return render_template("login.html")
 
@@ -103,7 +112,7 @@ def register_user():
         # Logikk for å registrere en ny bruker
         # ...
         return redirect(url_for("register_user"))  # Omdiriger tilbake til registreringssiden
-    return render_template("register")
+    return render_template("register.html")
 
 
 @app.route("/logout", methods=["POST", "GET"])
@@ -111,7 +120,7 @@ def logout():
     session.pop("user", None)
     session.pop("email", None)
     flash("Du har blitt logget ut", "info")
-    return redirect(url_for("login.html"))
+    return redirect(url_for("login"))
 
 @app.route("/create_tour", methods=["POST"])
 def create_tour():
@@ -121,7 +130,7 @@ def create_tour():
         description = request.form.get("description")
         flash("Reisen til {} er blitt opprettet!".format(destination))
 
-        return redirect(url_for('tours.html'))  # Erstatt 'tours_page' med riktig rute for å vise reiser
+        return redirect(url_for('tours'))  # Erstatt 'tours_page' med riktig rute for å vise reiser
 
 if __name__ == "__main__":
     with app.app_context():

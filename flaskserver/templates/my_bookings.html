@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mine Bookinger</title>
+    <!-- Legg til stil og andre head-elementer her -->
+</head>
+<body>
+    <h1>Mine Bookinger</h1>
+    {% if bookings %}
+        <ul>
+            {% for booking in bookings %}
+                <li>
+                    Tur: {{ booking.tour.name }} <br>
+                    Beskrivelse: {{ booking.tour.description }} <br>
+                    Dato: {{ booking.tour.start_date }} til {{ booking.tour.end_date }} <br>
+                    Pris: {{ booking.tour.price }} <br>
+                    Booket Dato: {{ booking.booking_date }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Du har ingen bookede turer.</p>
+    {% endif %}
+</body>
+</html>

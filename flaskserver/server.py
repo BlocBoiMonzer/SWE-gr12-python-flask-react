@@ -14,9 +14,9 @@ UPLOAD_FOLDER = os.path.join('static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
+CORS(app)
+app.secret_key = "hadi"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = "hadi"
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=5)
@@ -29,18 +29,14 @@ migrate = Migrate(app, db)
 
 
 class users(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(50))
-    lastname = db.Column(db.String(50))
-    phonenumber = db.Column(db.Integer, unique=True, nullable=False)
-    address = db.Column(db.String(100))
-    email = db.Column(db.String(100), unique=True, nullable=False)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
-    bookings = db.relationship('Booking', backref='booked_user', lazy=True)
-
-
-
+    ID = db.Column("ID", db.Integer, primary_key=True, autoincrement=True)
+    firstname = db.Column("firstName", db.String(50))
+    lastname = db.Column("lastName", db.String(50))
+    phonenumber = db.Column("phoneNumber", db.Integer)
+    address = db.Column("address", db.String(100))
+    email = db.Column("email", db.String(100))
+    username = db.Column("username", db.String(50), unique=True, nullable=False)
+    password = db.Column("password", db.String(100), nullable=False)
 
     def __init__(self, firstname, lastname, phonenumber, address, email, username, password):
         self.firstname = firstname
@@ -175,21 +171,20 @@ def login():
 
         if user:
             session["user"] = username
-            return redirect(url_for("user"))
+            flash("Du har blitt logget inn!")
+            return redirect(url_for("index"))
+
         else:
             flash("Feil brukernavn eller passord. Prøv igjen.", "error")
-            return redirect(url_for("login"))
+            return redirect(url_for("index"))
     else:
         if "user" in session:
             flash("Allerede logget inn!")
-            return redirect(url_for("user"))
+            return redirect(url_for("login"))
 
         return render_template("login.html")
 
-
-
-
-@app.route("/logout", methods=["POST", "GET"])
+@app.route("/index")
 def logout():
     session.pop("user", None)
     session.pop("email", None)

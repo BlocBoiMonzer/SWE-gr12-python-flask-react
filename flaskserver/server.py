@@ -1,6 +1,5 @@
 import app
 from flask import Flask, render_template, url_for, request, redirect, session, flash
-import urllib.request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
@@ -99,14 +98,10 @@ def user():
         try:
             current_user.firstname = request.form.get('firstname', '').strip()
             current_user.lastname = request.form.get('lastname', '').strip()
-            # Oppdater andre felt etter behov...
             db.session.commit()
             flash('Brukerinformasjon oppdatert.')
         except KeyError as e:
             flash(f'Manglende felt: {e}')
-            # returner samme side med feilmelding
-
-    # For GET-forespørsel eller etter POST-behandling
     return render_template('user.html', user=current_user)
 
 
@@ -124,7 +119,6 @@ def update_user():
             current_user.firstname = request.form['firstname']
             current_user.lastname = request.form['lastname']
             current_user.email = request.form['email']
-            # Oppdater andre felt etter behov...
             db.session.commit()
             flash('Brukerinformasjon oppdatert.')
             return redirect(url_for('user'))
@@ -147,7 +141,6 @@ def upload_image():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        # print('upload_image filename: ' + filename)
         flash('Image successfully uploaded and displayed below')
         return render_template('index.html', filename=filename)
     else:
@@ -205,9 +198,7 @@ class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tour_id = db.Column(db.Integer, db.ForeignKey('tour.id'), nullable=False)
     booking_date = db.Column(db.DateTime, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # Sørg for at dette stemmer med 'users' id-kolonnenavn
-
-    # Oppdaterte backref-navn
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship('users', backref='user_bookings')
     tour = db.relationship('Tour', backref='tour_bookings')
 
@@ -218,13 +209,11 @@ class Tour(db.Model):
     price = db.Column(db.Float, nullable=False)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
-    # Andre felt etter behov ...
 
 
 @app.route('/create_tour', methods=['GET', 'POST'])
 def create_tour():
     if request.method == 'POST':
-        # Hent data fra skjemaet
         name = request.form.get('name')
         description = request.form.get('description')
         price = request.form.get('price')
@@ -233,7 +222,6 @@ def create_tour():
         start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
         end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
 
-        # Opprett en ny Tour-instans
         new_tour = Tour(
             name=name,
             description=description,
@@ -242,15 +230,9 @@ def create_tour():
             end_date=end_date
         )
 
-
-        # Legg til i databasen og commit
         db.session.add(new_tour)
         db.session.commit()
-
-        # Redirect til listen med turer eller en bekreftelsesside
         return redirect(url_for('show_tours'))
-
-    # Hvis det er en GET-forespørsel, vis bare skjemaet
     return render_template('create_tour.html')
 
 
@@ -270,20 +252,18 @@ def book_tour(tour_id):
     current_user = users.query.filter_by(username=session['user']).first()
 
     if request.method == 'POST':
-        # Sjekk først om brukeren allerede har booket denne turen
         existing_booking = Booking.query.filter_by(user_id=current_user.id, tour_id=tour.id).first()
         if existing_booking:
             flash('Du har allerede booket denne turen.')
             return redirect(url_for('show_tours'))
 
-        # Opprett en ny booking
+
         new_booking = Booking(user_id=current_user.id, tour_id=tour.id)
         db.session.add(new_booking)
         db.session.commit()
         flash('Turen har blitt booket.')
-        return redirect(url_for('user_bookings'))  # Erstatte med en faktisk side som viser brukerens bookinger
+        return redirect(url_for('user_bookings'))
 
-    # For GET-forespørsler, render en bestillingsbekreftelsesside eller lignende
     return render_template('book_tour.html', tour=tour)
 
 @app.route('/my-bookings')
@@ -297,7 +277,6 @@ def user_bookings():
         flash('Noe gikk galt, kunne ikke finne bruker.')
         return redirect(url_for('login'))
 
-    # Hent alle bookinger for den nåværende brukeren
     bookings = Booking.query.filter_by(user_id=current_user.id).all()
     return render_template('my_bookings.html', bookings=bookings)
 

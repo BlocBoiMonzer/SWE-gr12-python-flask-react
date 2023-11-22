@@ -6,77 +6,83 @@
     <title>Tours</title>
     <style>
         body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f4f4f4;
-}
-
-h1, h2 {
-    color: #333;
-}
-
-form {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-input[type="text"],
-input[type="date"],
-textarea {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .tour-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 20px;
+        }
+        .tour-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+        .tour-card h3 {
+            color: #007bff;
+        }
+        .tour-card p {
+            color: #555;
+            margin: 5px 0;
+        }
+        .tour-card a {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        .tour-card a:hover {
+            background-color: #0056b3;
+        }
+        .create-tour-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            text-align: center;
+            text-decoration: none;
+        }
+        .create-tour-button:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
-    <h1>Reiser</h1>
+    <h1>Tilgjengelige Reiser</h1>
 
-    <section>
-        <h2>Opprett en Reise</h2>
-        <form id="create-tour-form">
-            <label for="destination">Destinasjon:</label>
-            <input type="text" id="destination" name="destination" required>
+    <a href="{{ url_for('create_tour') }}" class="create-tour-button">Opprett Ny Reise</a>
+    <a href="{{ url_for('user') }}" class="create-tour-button">Gå tilbake til Brukerside</a>
 
-            <label for="date">Dato:</label>
-            <input type="date" id="date" name="date" required>
-
-            <label for="description">Beskrivelse:</label>
-            <textarea id="description" name="description"></textarea>
-
-            <button type="submit">Opprett Reise</button>
-        </form>
-    </section>
-
-    <section>
-        <h2>Tilgjengelige Reiser</h2>
-        <!-- Her kan du liste opp tilgjengelige reiser -->
-    </section>
+    <div class="tour-container">
+        {% for tour in tours %}
+            <div class="tour-card">
+                <h3>{{ tour.name }}</h3>
+                <p>{{ tour.description }}</p>
+                <p>Pris: {{ tour.price }} kr</p>
+                <p>Datoer: {{ tour.start_date }} til {{ tour.end_date }}</p>
+                <a href="{{ url_for('book_tour', tour_id=tour.id) }}">Book denne turen</a>
+            </div>
+        {% endfor %}
+    </div>
 </body>
 </html>

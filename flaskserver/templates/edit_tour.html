@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ... Head-innhold ... -->
+</head>
+<body>
+    <h1>Rediger Tur</h1>
+    <form method="post">
+        <label for="name">Navn:</label>
+        <input type="text" id="name" name="name" value="{{ tour.name }}" required>
+
+        <label for="description">Beskrivelse:</label>
+        <textarea id="description" name="description" required>{{ tour.description }}</textarea>
+
+        <label for="price">Pris:</label>
+        <input type="number" id="price" name="price" value="{{ tour.price }}" required>
+
+        <label for="start_date">Startdato:</label>
+        <input type="date" id="start_date" name="start_date" value="{{ tour.start_date }}" required>
+
+        <label for="end_date">Sluttdato:</label>
+        <input type="date" id="end_date" name="end_date" value="{{ tour.end_date }}" required>
+
+        <button type="submit">Oppdater Tur</button>
+    </form>
+</body>
+</html>

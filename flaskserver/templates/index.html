@@ -3,34 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turer Oversikt</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <title>Home Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #333;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px;
+            font-weight: bold;
+        }
+        .header-image {
+            max-width: 100%;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h2>Tilgjengelige Turer</h2>
-        <div class="row">
-            {% for tour in tours %}
-                <div class="col-md-4">
-                    <div class="card mb-4 box-shadow">
-                        <img class="card-img-top" src="{{ tour.image_url }}" alt="Tur Bilde">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ tour.title }}</h5>
-                            <p class="card-text">{{ tour.description }}</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a href="/tour/{{ tour.id }}" class="btn btn-sm btn-outline-secondary">Vis Detaljer</a>
-                                </div>
-                                <small class="text-muted">{{ tour.price }} kr</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+        <img class="header-image" src="https://image.jimcdn.com/app/cms/image/transf/none/path/sa6549607c78f5c11/image/ia75200d7d26d4766/version/1463569446/nice-france.jpg" alt="Lokale reiser bilde">
+        <h1>Lokale Reise App</h1>
+        <p>Utforsk spennende reisemål i ditt nærområde!</p>
+        <a class="btn" href="login">Logg inn</a>
+        <a class="btn" href="register">Registrer</a>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>

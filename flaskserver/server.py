@@ -153,7 +153,6 @@ def display_image(filename):
     return redirect(url_for('static', filename='uploads/' + filename), code=301)
 
 
-
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
@@ -177,12 +176,14 @@ def login():
 
         return render_template("login.html")
 
+
 @app.route("/index")
 def logout():
     session.pop("user", None)
     session.pop("email", None)
     flash("Du har blitt logget ut", "info")
     return redirect(url_for("login"))
+
 
 @app.route('/tours')
 def show_tours():
@@ -193,7 +194,6 @@ def show_tours():
     return render_template('tours.html', tours=tours)
 
 
-
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tour_id = db.Column(db.Integer, db.ForeignKey('tour.id'), nullable=False)
@@ -201,6 +201,7 @@ class Booking(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship('users', backref='user_bookings')
     tour = db.relationship('Tour', backref='tour_bookings')
+
 
 class Tour(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -242,6 +243,7 @@ def create_tour_form():
         return redirect(url_for('login'))
     return render_template('create_tour.html')
 
+
 @app.route('/book-tour/<int:tour_id>', methods=['GET', 'POST'])
 def book_tour(tour_id):
     if 'user' not in session:
@@ -256,8 +258,6 @@ def book_tour(tour_id):
         if existing_booking:
             flash('Du har allerede booket denne turen.')
             return redirect(url_for('show_tours'))
-
-
         new_booking = Booking(user_id=current_user.id, tour_id=tour.id)
         db.session.add(new_booking)
         db.session.commit()
@@ -265,6 +265,7 @@ def book_tour(tour_id):
         return redirect(url_for('user_bookings'))
 
     return render_template('book_tour.html', tour=tour)
+
 
 @app.route('/my-bookings')
 def user_bookings():
@@ -283,6 +284,7 @@ def user_bookings():
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 if __name__ == "__main__":
     with app.app_context():

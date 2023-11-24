@@ -70,7 +70,7 @@
 <body>
     <div class="container">
         <h2 class="text-center mb-4">Opprett en ny reise</h2>
-        <form method="post" action="{{ url_for('create_tour') }}">
+        <form method="post" action="{{ url_for('main.create_tour') }}">
             <div class="form-group">
                 <label for="name">Navn på reise:</label>
                 <input type="text" class="form-control" id="name" name="name" required>
@@ -105,7 +105,7 @@
     </div>
 
      <div class="back-link">
-        <a href="{{ url_for('show_tours') }}" class="btn btn-custom">Gå Tilbake til Turer</a>
+        <a href="{{ url_for('main.show_tours') }}" class="btn btn-custom">Gå Tilbake til Turer</a>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

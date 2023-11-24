@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, url_for, request, redirect, session, flash
+from flask_login import current_user, login_required
 from models import User, Booking, Tour
+from datetime import datetime
 from extensions import db
 from werkzeug.utils import secure_filename
 import os
@@ -10,9 +12,11 @@ UPLOAD_FOLDER = os.path.join('flaskserver', 'static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 
+
 @main.route("/")
 def home():
     return render_template("index.html")
+
 
 @main.route("/register", methods=["POST", "GET"])
 def register():
@@ -122,6 +126,7 @@ def upload_image():
 def display_image(filename):
     return redirect(url_for('static', filename='uploads/' + filename), code=301)
 
+
 @main.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
@@ -153,11 +158,16 @@ def show_tours():
     if 'user' not in session:
         flash('Vennligst logg inn for å se reiser.')
         return redirect(url_for("main.login"))
-    tours = Tour.query.all()
-    return render_template('tours.html', tours=tours)
+    current_user = User.query.filter_by(username=session['user']).first()
+    tours = Tour.query.filter_by(host_id=current_user.id).all()
+    return render_template('tours.html', tours=tours, current_user=current_user)
 
 @main.route('/create_tour', methods=['GET', 'POST'])
 def create_tour():
+    if 'user' not in session:
+        flash('Vennligst logg inn for å opprette en reise.')
+        return redirect(url_for("main.login"))
+
     if request.method == 'POST':
         name = request.form.get('name')
         description = request.form.get('description')
@@ -167,12 +177,15 @@ def create_tour():
         start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
         end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
 
+        current_user = User.query.filter_by(username=session['user']).first()
+
         new_tour = Tour(
             name=name,
             description=description,
             price=price,
             start_date=start_date,
-            end_date=end_date
+            end_date=end_date,
+            host_id=current_user.id 
         )
 
         db.session.add(new_tour)
@@ -188,6 +201,11 @@ def book_tour(tour_id):
 
     tour = Tour.query.get_or_404(tour_id)
     current_user = User.query.filter_by(username=session['user']).first()
+
+    # Prevent the host from booking their own tour
+    if tour.host_id == current_user.id:
+        flash('Du kan ikke booke din egen tur.')
+        return redirect(url_for('main.show_tours'))
 
     if request.method == 'POST':
         existing_booking = Booking.query.filter_by(user_id=current_user.id, tour_id=tour.id).first()

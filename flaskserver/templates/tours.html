@@ -70,8 +70,8 @@
 <body>
     <h1>Tilgjengelige Reiser</h1>
 
-    <a href="{{ url_for('create_tour') }}" class="create-tour-button">Opprett Ny Reise</a>
-    <a href="{{ url_for('user') }}" class="create-tour-button">Gå tilbake til Brukerside</a>
+    <a href="{{ url_for('main.create_tour') }}" class="create-tour-button">Opprett Ny Reise</a>
+    <a href="{{ url_for('main.user') }}" class="create-tour-button">Gå tilbake til Brukerside</a>
 
     <div class="tour-container">
         {% for tour in tours %}

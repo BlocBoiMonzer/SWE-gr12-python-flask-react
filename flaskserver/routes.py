@@ -9,6 +9,7 @@ main = Blueprint('main', __name__)
 UPLOAD_FOLDER = os.path.join('flaskserver', 'static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
+
 @main.route("/")
 def home():
     return render_template("index.html")
@@ -109,7 +110,7 @@ def upload_image():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(UPLOAD_FOLDER, filename))
-        current_user.image = filename
+        current_user.image_filename = filename
         db.session.commit()
         flash('Profilbilde er oppdatert.')
         return redirect(url_for('main.user'))
@@ -137,12 +138,8 @@ def login():
         else:
             flash("Feil brukernavn eller passord. Prøv igjen.", "error")
             return redirect(url_for("main.login"))
-    else:
-        if "user" in session:
-            flash("Allerede logget inn!")
-            return redirect(url_for("main.user")) 
 
-        return render_template("login.html")
+    return render_template("login.html")
 
 @main.route("/index")
 def logout():
@@ -157,7 +154,7 @@ def show_tours():
         flash('Vennligst logg inn for å se reiser.')
         return redirect(url_for("main.login"))
     tours = Tour.query.all()
-    return render_template('main.tours', tours=tours)
+    return render_template('tours.html', tours=tours)
 
 @main.route('/create_tour', methods=['GET', 'POST'])
 def create_tour():
@@ -181,7 +178,7 @@ def create_tour():
         db.session.add(new_tour)
         db.session.commit()
         return redirect(url_for('main.show_tours'))
-    return render_template('main.create_tour')
+    return render_template('create_tour.html')
 
 @main.route('/book-tour/<int:tour_id>', methods=['GET', 'POST'])
 def book_tour(tour_id):

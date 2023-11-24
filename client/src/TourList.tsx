@@ -15,6 +15,7 @@ function TourList() {
         <div key={tour.id}>
           <h2>{tour.name}</h2>
           <p>{tour.description}</p>
+          <p>hello world</p>
         </div>
       ))}
     </div>

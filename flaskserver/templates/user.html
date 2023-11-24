@@ -3,18 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Page</title>
+    <title>User Profile</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
-            text-align: center;
             color: #333;
+            text-align: center; /* Sentrerer all tekst */
         }
 
-        .container {
+        nav {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        header {
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        main {
             max-width: 600px;
             margin: 20px auto;
             padding: 20px;
@@ -23,28 +44,36 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        h1, h2 {
-            color: #4CAF50;
-            margin-bottom: 24px;
+        section {
+            margin-bottom: 20px;
         }
 
-        p, label {
+        h2 {
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        p {
             font-size: 16px;
             line-height: 1.6;
             margin-bottom: 10px;
         }
 
-        input, textarea, button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        input[type="file"] {
+            margin-bottom: 10px;
         }
 
         button {
             background-color: #4CAF50;
             color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
         }
 
@@ -52,91 +81,54 @@
             background-color: #45a049;
         }
 
-        .user-image {
-            margin-top: 20px;
-            border-radius: 50%;
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-        }
-
-        .tour-card {
-            background-color: #e9ecef;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            text-align: left;
-        }
-
-        .tour-card h3 {
-            color: #007bff;
-            margin-bottom: 10px;
-        }
-
-        .tour-card p {
-            margin-bottom: 5px;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
         footer {
             margin-top: 30px;
             padding: 20px;
             background-color: #333;
             color: white;
-            text-align: center;
         }
     </style>
-
-<head>
-    <!-- Eksisterende head-innhold -->
 </head>
 <body>
-<p><h1 align="center">Python Flask Upload and display image</h1></p>
-<div class="container">
-<div class="row">
-    <h2>Select a file to upload</h2>
-    <p>
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <ul>
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-          {% endif %}
-        {% endwith %}
-    </p>
-    {% if filename %}
-        <div>
-            <img src="{{ url_for('display_image', filename=filename) }}">
-        </div>
-    {% endif %}
-    <form method="post" action="/" enctype="multipart/form-data">
-        <dl>
-            <p>
-                <input type="file" name="file" class="form-control" autocomplete="off" required>
-            </p>
-        </dl>
-        <p>
-            <input type="submit" value="Submit" class="btn btn-info">
-        </p>
-    </form>
-    <form method="post" action="{{ url_for('upload_image') }}" enctype="multipart/form-data">
-    <input type="file" name="image">
-    <button type="submit">Last opp bilde</button>
-</form>
+    <nav>
+        <a href="{{ url_for('main.home') }}">Home</a>
+        <a href="{{ url_for('main.user') }}">Profile</a>
+        <a href="{{ url_for('main.logout') }}">Logout</a>
+    </nav>
 
-</div>
-</div>
+    <header>
+        <h1>Welcome, {{ user.username }}!</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2>Your Information</h2>
+            <p>Name: {{ user.firstname }} {{ user.lastname }}</p>
+            <p>Email: {{ user.email }}</p>
+            <!-- Add more information here -->
+        </section>
+
+        <section>
+            <h2>Profile Picture</h2>
+            {% if user.image %}
+                <img src="{{ url_for('main.display_image', filename=user.image) }}" alt="Profile Picture">
+            {% else %}
+                <p>No profile picture uploaded.</p>
+            {% endif %}
+            <form method="post" action="{{ url_for('main.upload_image') }}" enctype="multipart/form-data">
+                <input type="file" name="image">
+                <button type="submit">Upload New Picture</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2022 Your Company Name. All rights reserved.</p>
+        <nav>
+            <a href="{{ url_for('main.home') }}">Home</a> |
+            <a href="{{ url_for('main.user') }}">Profile</a> |
+            <a href="{{ url_for('main.logout') }}">Logout</a>
+        </nav>
+    </footer>
 </body>
 </html>

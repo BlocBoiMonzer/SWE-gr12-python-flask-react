@@ -93,25 +93,19 @@
     <nav>
         <a href="{{ url_for('main.home') }}">Home</a>
         <a href="{{ url_for('main.user') }}">Profile</a>
+        <a href="{{ url_for('main.show_tours') }}">Ledige turer</a>
         <a href="{{ url_for('main.logout') }}">Logout</a>
     </nav>
 
     <header>
         <h1>Welcome, {{ user.username }}!</h1>
     </header>
-
     <main>
         <section>
-            <h2>Your Information</h2>
-            <p>Name: {{ user.firstname }} {{ user.lastname }}</p>
-            <p>Email: {{ user.email }}</p>
-            <!-- Add more information here -->
-        </section>
-
-        <section>
             <h2>Profile Picture</h2>
-            {% if user.image %}
-                <img src="{{ url_for('main.display_image', filename=user.image) }}" alt="Profile Picture">
+            {% if user.image_filename %}
+                <img src="{{ url_for('static', filename='uploads/' + user.image_filename) }}" alt="Profile Picture">
+                <p>{{ user.image_filename }}</p>
             {% else %}
                 <p>No profile picture uploaded.</p>
             {% endif %}
@@ -121,7 +115,6 @@
             </form>
         </section>
     </main>
-
     <footer>
         <p>&copy; 2022 Your Company Name. All rights reserved.</p>
         <nav>

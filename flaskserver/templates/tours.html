@@ -70,19 +70,23 @@
 <body>
     <h1>Tilgjengelige Reiser</h1>
 
-    <a href="{{ url_for('create_tour') }}" class="create-tour-button">Opprett Ny Reise</a>
-    <a href="{{ url_for('user') }}" class="create-tour-button">Gå tilbake til Brukerside</a>
+    <a href="{{ url_for('main.create_tour') }}" class="create-tour-button">Opprett Ny Reise</a>
+    <a href="{{ url_for('main.user') }}" class="create-tour-button">Gå tilbake til Brukerside</a>
 
     <div class="tour-container">
         {% for tour in tours %}
-            <div class="tour-card">
-                <h3>{{ tour.name }}</h3>
-                <p>{{ tour.description }}</p>
-                <p>Pris: {{ tour.price }} kr</p>
-                <p>Datoer: {{ tour.start_date }} til {{ tour.end_date }}</p>
-                <a href="{{ url_for('book_tour', tour_id=tour.id) }}">Book denne turen</a>
-            </div>
-        {% endfor %}
+    <div class="tour-card">
+        <h3>{{ tour.name }}</h3>
+        <p>{{ tour.description }}</p>
+        <p>Pris: {{ tour.price }} kr</p>
+        <p>Datoer: {{ tour.start_date }} til {{ tour.end_date }}</p>
+        {% if tour.host_id == current_user.id %}
+            <p>Du er vert for denne turen</p>
+        {% else %}
+            <a href="{{ url_for('main.book_tour', tour_id=tour.id) }}">Book denne turen</a>
+        {% endif %}
+        </div>
+    {% endfor %}
     </div>
 </body>
 </html>

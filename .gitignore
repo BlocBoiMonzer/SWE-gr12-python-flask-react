@@ -3,4 +3,6 @@
 *.xml
 .idea/workspace.xml
 flaskserver/_pycache_/
+*.pyc
+
 **/__pycache__/

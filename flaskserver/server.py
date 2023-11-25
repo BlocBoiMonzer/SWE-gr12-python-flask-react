@@ -293,9 +293,6 @@ def user_bookings():
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-UPLOAD_FOLDER = os.path.join('static', 'uploads')
-print("Upload folder is set to:", UPLOAD_FOLDER)
-
 
 if __name__ == "__main__":
     with app.app_context():

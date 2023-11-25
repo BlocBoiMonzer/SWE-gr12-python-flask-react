@@ -1,50 +1,52 @@
+import os
+import tempfile
 import pytest
-from flask import Flask, session
-from sqlalchemy.testing import db
-
-from flaskserver.server import app
-
+from flaskserver import create_app
+from flaskserver.models import User, Tour, Booking
+from flaskserver import db
 
 @pytest.fixture
 def client():
+    app = create_app()
     app.config['TESTING'] = True
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-    app.config['WTF_CSRF_ENABLED'] = False
+    client = app.test_client()
 
-    with app.test_client() as client:
-        with app.app_context():
-            db.create_all()
-        yield client
+    with app.app_context():
+        db.create_all()
 
-
-def test_register(client):
-    response = client.post('/register', data={
-        'firstname': 'John',
-        'lastname': 'Doe',
-        'phonenumber': '123456789',
-        'address': '123 Main St',
-        'email': 'john.doe@example.com',
-        'username': 'johndoe',
-        'password': 'password123'
-    })
-
-    assert b'Registration successful!' in response.data
-
+    yield client
 
 def test_login(client):
-    client.post('/register', data={
-        'firstname': 'Test',
-        'lastname': 'User',
-        'phonenumber': '987654321',
-        'address': '456 Oak St',
-        'email': 'test.user@example.com',
-        'username': 'testuser',
-        'password': 'testpassword'
-    })
+    response = client.post('/login', data=dict(
+        username='testuser',
+        password='testpassword'
+    ), follow_redirects=True)
+    assert b'Du har blitt logget inn!' in response.data
 
-    response = client.post('/login', data={
-        'username': 'testuser',
-        'password': 'testpassword'
-    }, follow_redirects=True)
+def test_logout(client):
+    response = client.get('/index', follow_redirects=True)
+    assert b'Du har blitt logget ut' in response.data
 
-    assert b'Logged in!' in response.data
+def test_show_tours(client):
+    response = client.get('/tours')
+    assert 'Vennligst logg inn for å se reiser.'.encode('utf-8') in response.data
+
+def test_create_tour(client):
+    response = client.post('/create_tour', data=dict(
+        name='Test Tour',
+        description='This is a test tour',
+        price='100',
+        start_date='2023-01-01',
+        end_date='2023-01-07',
+        image=(tempfile.NamedTemporaryFile(suffix=".png"), 'test.png')
+    ), follow_redirects=True)
+    assert b'Turen har blitt opprettet' in response.data
+
+def test_book_tour(client):
+    response = client.post('/book-tour/1', follow_redirects=True)
+    assert 'Vennligst logg inn for å booke reiser.'.encode('utf-8') in response.data
+
+def test_user_bookings(client):
+    response = client.get('/my-bookings')
+    assert 'Vennligst logg inn for å se dine bookinger.'.encode('utf-8') in response.data

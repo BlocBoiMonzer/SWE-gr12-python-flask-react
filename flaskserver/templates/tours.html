@@ -82,7 +82,7 @@
                 <p>Pris: {{ tour.price }} kr</p>
                 <p>Datoer: {{ tour.start_date }} til {{ tour.end_date }}</p>
                 {% if tour.host_id == current_user.id %}
-                    <p>Du er vert for denne turen</p>
+                    <p>Det er opprettet et nytt tur</p>
                 {% else %}
                     <a href="{{ url_for('main.book_tour', tour_id=tour.id) }}">Book denne turen</a>
                 {% endif %}

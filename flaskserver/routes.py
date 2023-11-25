@@ -5,6 +5,8 @@ from datetime import datetime
 from extensions import db
 from werkzeug.utils import secure_filename
 import os
+from flask import current_app
+from config import Config
 
 main = Blueprint('main', __name__)
 
@@ -113,7 +115,9 @@ def upload_image():
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        file.save(os.path.join(UPLOAD_FOLDER, filename))
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+            os.makedirs(app.config['UPLOAD_FOLDER'])
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         current_user.image_filename = filename
         db.session.commit()
         flash('Profilbilde er oppdatert.')
@@ -157,17 +161,18 @@ def logout():
 def show_tours():
     if 'user' not in session:
         flash('Vennligst logg inn for å se reiser.')
-        return redirect(url_for("main.login"))
-    current_user = User.query.filter_by(username=session['user']).first()
-    tours = Tour.query.filter_by(host_id=current_user.id).all()
-    return render_template('tours.html', tours=tours, current_user=current_user)
+        return redirect(url_for('login'))
+    tours = Tour.query.all()
+    return render_template('tours.html', tours=tours)
+
+
+
+current_path = os.path.dirname(os.path.abspath(__file__))
+
+UPLOAD_FOLDER = os.path.join(current_path, 'static', 'uploads')
 
 @main.route('/create_tour', methods=['GET', 'POST'])
 def create_tour():
-    if 'user' not in session:
-        flash('Vennligst logg inn for å opprette en reise.')
-        return redirect(url_for("main.login"))
-
     if request.method == 'POST':
         name = request.form.get('name')
         description = request.form.get('description')
@@ -176,8 +181,16 @@ def create_tour():
         end_date_str = request.form.get('end_date')
         start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
         end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
-
-        current_user = User.query.filter_by(username=session['user']).first()
+        image = request.files['image']
+        if image and allowed_file(image.filename):
+            filename = secure_filename(image.filename)
+            if not os.path.exists(UPLOAD_FOLDER):
+                os.makedirs(UPLOAD_FOLDER)
+            image.save(os.path.join(UPLOAD_FOLDER, filename))
+            image_url = 'uploads/' + filename
+        else:
+            flash('Tillatte bildetyper er - png, jpg, jpeg, gif')
+            return redirect(request.url)
 
         new_tour = Tour(
             name=name,
@@ -185,12 +198,12 @@ def create_tour():
             price=price,
             start_date=start_date,
             end_date=end_date,
-            host_id=current_user.id 
+            image_url=image_url
         )
 
         db.session.add(new_tour)
         db.session.commit()
-        return redirect(url_for('main.show_tours'))
+        return redirect(url_for('show_tours'))
     return render_template('create_tour.html')
 
 @main.route('/book-tour/<int:tour_id>', methods=['GET', 'POST'])
@@ -202,7 +215,6 @@ def book_tour(tour_id):
     tour = Tour.query.get_or_404(tour_id)
     current_user = User.query.filter_by(username=session['user']).first()
 
-    # Prevent the host from booking their own tour
     if tour.host_id == current_user.id:
         flash('Du kan ikke booke din egen tur.')
         return redirect(url_for('main.show_tours'))

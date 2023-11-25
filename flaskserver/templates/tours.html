@@ -75,18 +75,19 @@
 
     <div class="tour-container">
         {% for tour in tours %}
-    <div class="tour-card">
-        <h3>{{ tour.name }}</h3>
-        <p>{{ tour.description }}</p>
-        <p>Pris: {{ tour.price }} kr</p>
-        <p>Datoer: {{ tour.start_date }} til {{ tour.end_date }}</p>
-        {% if tour.host_id == current_user.id %}
-            <p>Du er vert for denne turen</p>
-        {% else %}
-            <a href="{{ url_for('main.book_tour', tour_id=tour.id) }}">Book denne turen</a>
-        {% endif %}
-        </div>
-    {% endfor %}
+            <div class="tour-card">
+                <h3>{{ tour.name }}</h3>
+                <img src="{{ url_for('static', filename=tour.image_url) }}" alt="Tour image" style="width: 100%; height: auto;">
+                <p>{{ tour.description }}</p>
+                <p>Pris: {{ tour.price }} kr</p>
+                <p>Datoer: {{ tour.start_date }} til {{ tour.end_date }}</p>
+                {% if tour.host_id == current_user.id %}
+                    <p>Du er vert for denne turen</p>
+                {% else %}
+                    <a href="{{ url_for('main.book_tour', tour_id=tour.id) }}">Book denne turen</a>
+                {% endif %}
+            </div>
+        {% endfor %}
     </div>
 </body>
 </html>

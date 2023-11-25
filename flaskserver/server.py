@@ -221,13 +221,22 @@ def create_tour():
         end_date_str = request.form.get('end_date')
         start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
         end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+        image = request.files['image']
+        if image and allowed_file(image.filename):
+            filename = secure_filename(image.filename)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            image_url = 'uploads/' + filename
+        else:
+            flash('Tillatte bildetyper er - png, jpg, jpeg, gif')
+            return redirect(request.url)
 
         new_tour = Tour(
             name=name,
             description=description,
             price=price,
             start_date=start_date,
-            end_date=end_date
+            end_date=end_date,
+            image_url=image_url
         )
 
         db.session.add(new_tour)
@@ -283,6 +292,9 @@ def user_bookings():
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+UPLOAD_FOLDER = os.path.join('static', 'uploads')
+print("Upload folder is set to:", UPLOAD_FOLDER)
 
 
 if __name__ == "__main__":

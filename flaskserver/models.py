@@ -29,3 +29,4 @@ class Tour(db.Model):
     price = db.Column(db.Float, nullable=False)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
+    image_url = db.Column(db.String(200), nullable=True)

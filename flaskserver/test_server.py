@@ -1,7 +1,10 @@
-import pytest
-from flaskserver.app import create_app
+import pytest, os
+from flask import Flask
+from app import create_app
 from sqlalchemy.testing import db
-from flaskserver.models import Booking, Tour, User
+from models import Booking, Tour, User
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 
 @pytest.fixture
@@ -20,8 +23,8 @@ def client():
             db.drop_all()
 
 
-def test_register(test_client):
-    response = test_client.post('/register', data={
+def test_register(client):
+    response = client.post('/register', data={
         'firstname': 'John',
         'lastname': 'Doe',
         'phonenumber': '123456789',
@@ -33,15 +36,15 @@ def test_register(test_client):
 
     assert b'Registration successful!' in response.data
 
-def test_user_model():
+def test_user_model(client):
     user = User(firstname='John', lastname='Doe', phonenumber='123456789', address='123 Main St', email='john.doe@example.com', username='johndoe', password='password123')
     db.session.add(user)
     db.session.commit()
     assert User.query.filter_by(username='johndoe').first() is not None
 
 
-def test_login(test_client):
-    test_client.post('/register', data={
+def test_login(client):
+    client.post('/register', data={
         'firstname': 'Test',
         'lastname': 'User',
         'phonenumber': '987654321',
@@ -51,27 +54,27 @@ def test_login(test_client):
         'password': 'testpassword'
     })
 
-    response = test_client.post('/login', data={
+    response = client.post('/login', data={
         'username': 'testuser',
         'password': 'testpassword'
     }, follow_redirects=True)
 
     assert b'Logged in!' in response.data
 
-def test_login_failure(test_client):
-    response = test_client.post('/login', data={
+def test_login_failure(client):
+    response = client.post('/login', data={
     'username': 'wronguser',
     'password': 'wrongpassword'
 }, follow_redirects=True)
 
     assert b'Invalid credentials' in response.data
 
-def test_protected_route(test_client):
-    response = test_client.get('/protected_route', follow_redirects=True)
+def test_protected_route(client):
+    response = client.get('/protected_route', follow_redirects=True)
     assert b'Please log in to access this page.' in response.data
 
-def test_create_tour(test_client):
-    response = test_client.post('/create_tour', data={
+def test_create_tour(client):
+    response = client.post('/create_tour', data={
         'name': 'Test Tour',
         'description': 'This is a test tour',
         'price': '100',
@@ -82,8 +85,8 @@ def test_create_tour(test_client):
     tour = Tour.query.filter_by(name='Test Tour').first()
     assert tour is not None
 
-def test_successful_tour_creation(test_client):
-    response = test_client.post('/create_tour', data={
+def test_successful_tour_creation(client):
+    response = client.post('/create_tour', data={
     'name': 'Test Tour',
     'description': 'This is a test tour',
     'price': '100',
@@ -94,8 +97,8 @@ def test_successful_tour_creation(test_client):
     tour = Tour.query.filter_by(name='Test Tour').first()
     assert tour is not None
 
-def test_unsuccessful_tour_creation(test_client):
-    response = test_client.post('/create_tour', data={
+def test_unsuccessful_tour_creation(client):
+    response = client.post('/create_tour', data={
         'name': '',
         'description': '',
         'price': '',
@@ -105,30 +108,30 @@ def test_unsuccessful_tour_creation(test_client):
 
     assert b'Invalid tour data' in response.data
 
-def test_successful_booking(test_client):
+def test_successful_booking(client):
     tour = Tour.query.filter_by(name='Test Tour').first()
-    response = test_client.post(f'/book-tour/{tour.id}', data={})
+    response = client.post(f'/book-tour/{tour.id}', data={})
 
     booking = Booking.query.filter_by(tour_id=tour.id).first()
     assert booking is not None
 
-def test_unsuccessful_booking(test_client):
-    response = test_client.post('/book-tour/999', data={})
+def test_unsuccessful_booking(client):
+    response = client.post('/book-tour/999', data={})
 
     assert b'Tour does not exist' in response.data
 
-def test_user_authentication(test_client):
-    response = test_client.get('/create_tour', follow_redirects=True)
+def test_user_authentication(client):
+    response = client.get('/create_tour', follow_redirects=True)
 
     assert b'Please log in to access this page.' in response.data
 
-def test_user_authorization(test_client):
+def test_user_authorization(client):
     tour = Tour.query.filter_by(name='Test Tour').first()
-    response = test_client.post(f'/book-tour/{tour.id}', data={}, follow_redirects=True)
+    response = client.post(f'/book-tour/{tour.id}', data={}, follow_redirects=True)
 
     assert b'You cannot book your own tour.' in response.data
 
-def test_viewing_bookings(test_client):
-    response = test_client.get('/my-bookings', follow_redirects=True)
+def test_viewing_bookings(client):
+    response = client.get('/my-bookings', follow_redirects=True)
 
     assert b'Your bookings' in response.data

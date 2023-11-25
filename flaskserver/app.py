@@ -1,7 +1,7 @@
 from flask import Flask
-from config import Config
+from flaskserver.config import Config
 from flask_login import LoginManager
-from extensions import db, migrate
+from flaskserver.extensions import db, migrate
 from models import User
 
 def create_app(config_class=Config):

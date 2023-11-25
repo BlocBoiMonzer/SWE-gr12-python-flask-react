@@ -79,7 +79,7 @@
                 <h3>{{ tour.name }}</h3>
                 <img src="{{ url_for('static', filename=tour.image_url) }}" alt="Tour image" style="width: 100%; height: auto;">
                 <p>{{ tour.description }}</p>
-                <p>Pris: {{ tour.price }} kr</p>
+                <p>Pris: {{ tour.price }} kr</p>    
                 <p>Datoer: {{ tour.start_date }} til {{ tour.end_date }}</p>
                 {% if tour.host_id == current_user.id %}
                     <p>Det er opprettet et nytt tur</p>

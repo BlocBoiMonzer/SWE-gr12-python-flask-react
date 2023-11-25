@@ -166,9 +166,7 @@ def show_tours():
     return render_template('tours.html', tours=tours)
 
 
-
 current_path = os.path.dirname(os.path.abspath(__file__))
-
 UPLOAD_FOLDER = os.path.join(current_path, 'static', 'uploads')
 
 @main.route('/create_tour', methods=['GET', 'POST'])

@@ -78,20 +78,20 @@
         {% endif %}
     {% endwith %}
 
-    <form method="post" action="{{ url_for('login') }}">
+    <form method="post" action="{{ url_for('main.login') }}">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
-
+    
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
-
+    
         <button type="submit">Login</button>
     </form>
 
     {% if "user" in session %}
-        <p>You are already logged in as {{ session["user"] }}. <a href="{{ url_for('index') }}">Go to Home Page</a></p>
+        <p>You are already logged in as {{ session["user"] }}. <a href="{{ url_for('main.user') }}">Go to Home Page</a></p>
     {% endif %}
 
-    <p>Klikk her for å gå tilbake til <a href="{{ url_for('home') }}">hjemmesiden</a>.</p>
+    <p>Klikk her for å gå tilbake til <a href="{{ url_for('main.home') }}">hjemmesiden</a>.</p>
 </body>
 </html>

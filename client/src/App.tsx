@@ -1,24 +1,64 @@
-import { useState, useEffect } from 'react'
+// import { useState, useEffect } from 'react'
+import { BrowserRouter as BrowserRouter, Route, Routes } from 'react-router-dom';
+import Navbar from './Navbar';
 // import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+// import viteLogo from '/vite.svg'
 import './App.css'
+import TourList from './TourList';
 
 function App() {
-  const [data, setData] = useState([{}])
+  // my code to test the api
+  
+  // const [data, setData] = useState([{}])
 
-  useEffect(() =>{
-    fetch("http://127.0.0.1:5000/members").then(
-      res => res.json()
-    ).then(
-      data => {
-        setData(data)
-        console.log(data)
-      }
-    )
-  }, [])
+  // useEffect(() =>{
+  //   fetch("http://127.0.0.1:5000/members").then(
+  //     res => res.json()
+  //   ).then(
+  //     data => {
+  //       setData(data)
+  //       console.log(data)
+  //     }
+  //   )
+  // }, [])
+
+
   return (
     <>
-      <div>
+    <BrowserRouter>
+      <Navbar/>
+      <Routes>
+
+        <Route path='/'>
+
+        </Route>
+
+        <Route path='register'>
+
+        </Route>
+        
+        <Route path='/login'>
+          
+        </Route>
+
+        <Route path='/user'>
+          
+        </Route>
+
+        <Route path='/tours'>
+          <TourList />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+
+    </>
+  )
+}
+
+export default App
+
+
+      {/* <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -40,9 +80,4 @@ function App() {
 
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
-
-export default App
+      </p> */}

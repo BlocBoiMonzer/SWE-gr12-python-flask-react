@@ -65,28 +65,110 @@
         .create-tour-button:hover {
             background-color: #218838;
         }
+        .tour-section {
+            margin-bottom: 20px;
+        }
+        .tour-section h2 {
+            color: #007bff;
+            text-align: center;
+        }
+        .book-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        .book-button:hover {
+            background-color: #0056b3;
+        }
+        nav {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+    <nav>
+        <a href="{{ url_for('main.user') }}">Profile</a>
+        <a href="{{ url_for('main.user_bookings') }}">Dine turer</a>
+        <a href="{{ url_for('main.show_tours') }}">Ledige turer</a>
+        <a href="{{ url_for('main.logout') }}">Logout</a>
+    </nav>
+
     <h1>Tilgjengelige Reiser</h1>
 
     <a href="{{ url_for('main.create_tour') }}" class="create-tour-button">Opprett Ny Reise</a>
-    <a href="{{ url_for('main.user') }}" class="create-tour-button">Gå tilbake til Brukerside</a>
 
-    <div class="tour-container">
-        {% for tour in tours %}
-    <div class="tour-card">
-        <h3>{{ tour.name }}</h3>
-        <p>{{ tour.description }}</p>
-        <p>Pris: {{ tour.price }} kr</p>
-        <p>Datoer: {{ tour.start_date }} til {{ tour.end_date }}</p>
-        {% if tour.host_id == current_user.id %}
-            <p>Du er vert for denne turen</p>
-        {% else %}
-            <a href="{{ url_for('main.book_tour', tour_id=tour.id) }}">Book denne turen</a>
-        {% endif %}
+    <div class="tour-section">
+        <h2>Mine Reiser</h2>
+        <div class="tour-container">
+            {% for tour in tours %}
+            {% if tour.host_id == current_user.id %}  <!-- Endret her -->
+            <div class="tour-card" id="tour-{{ tour.id }}">
+                <h3>{{ tour.name }}</h3>
+                <p>{{ tour.description }}</p>
+                <p>Pris: {{ tour.price }}</p>
+                <p>Vert: {{ hosts[tour.id] }}</p>
+                <p>Startdato: {{ tour.start_date }}</p>
+                <p>Sluttdato: {{ tour.end_date }}</p>
+                <form method="POST" action="{{ url_for('main.book_tour', tour_id=tour.id) }}" onsubmit="event.preventDefault(); removeTour({{ tour.id }});">
+                    <button type="submit" class="book-button">Book</button>
+                </form>
+            </div>
+                {% endif %}
+            {% endfor %}
         </div>
-    {% endfor %}
     </div>
+    <div class="tour-section">
+        <h2>Andre Reiser</h2>
+        <div class="tour-container">
+            {% for tour in tours %}
+            {% if tour.host_id != current_user.id %}
+            <div class="tour-card" id="tour-{{ tour.id }}">
+                <h3>{{ tour.name }}</h3>
+                <p>{{ tour.description }}</p>
+                <p>Pris: {{ tour.price }}</p>
+                <p>Vert: {{ hosts[tour.id] }}</p>
+                <p>Startdato: {{ tour.start_date }}</p>
+                <p>Sluttdato: {{ tour.end_date }}</p>
+                <form method="POST" action="{{ url_for('main.book_tour', tour_id=tour.id) }}" onsubmit="removeTour({{ tour.id }});">
+                    <button type="submit" class="book-button">Book</button>
+                </form>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        function removeTour(tourId) {
+            var tourCard = document.getElementById('tour-' + tourId);
+            if (tourCard) {
+                tourCard.style.display = 'none';
+            }
+        }
+    </script>
+    <footer>
+        <p>Gruppe 12 corporation</p>
+    </footer>
 </body>
 </html>

@@ -6,6 +6,7 @@ from extensions import db
 from werkzeug.utils import secure_filename
 import os
 
+
 main = Blueprint('main', __name__)
 
 UPLOAD_FOLDER = os.path.join('flaskserver', 'static', 'uploads')
@@ -153,14 +154,20 @@ def logout():
     flash("Du har blitt logget ut", "info")
     return redirect(url_for("main.login"))
 
-@main.route('/tours')
+@main.route('/show-tours')
 def show_tours():
     if 'user' not in session:
         flash('Vennligst logg inn for å se reiser.')
         return redirect(url_for("main.login"))
+
     current_user = User.query.filter_by(username=session['user']).first()
-    tours = Tour.query.filter_by(host_id=current_user.id).all()
-    return render_template('tours.html', tours=tours, current_user=current_user)
+    if current_user is None:
+        flash('Noe gikk galt, kunne ikke finne bruker.')
+        return redirect(url_for("main.login"))
+
+    tours = Tour.query.all()
+    hosts = {tour.id: (User.query.get(tour.host_id).username if User.query.get(tour.host_id) else 'No host') for tour in tours}
+    return render_template('tours.html', tours=tours, hosts=hosts, current_user=current_user)
 
 @main.route('/create_tour', methods=['GET', 'POST'])
 def create_tour():
@@ -202,25 +209,21 @@ def book_tour(tour_id):
     tour = Tour.query.get_or_404(tour_id)
     current_user = User.query.filter_by(username=session['user']).first()
 
-    # Prevent the host from booking their own tour
     if tour.host_id == current_user.id:
         flash('Du kan ikke booke din egen tur.')
         return redirect(url_for('main.show_tours'))
 
-    if request.method == 'POST':
-        existing_booking = Booking.query.filter_by(user_id=current_user.id, tour_id=tour.id).first()
-        if existing_booking:
-            flash('Du har allerede booket denne turen.')
-            return redirect(url_for('main.show_tours'))
-        new_booking = Booking(user_id=current_user.id, tour_id=tour.id)
-        db.session.add(new_booking)
-        db.session.commit()
-        flash('Turen har blitt booket.')
-        return redirect(url_for('main.user_bookings'))
+    existing_booking = Booking.query.filter_by(user_id=current_user.id, tour_id=tour.id).first()
+    if existing_booking:
+        flash('Du har allerede booket denne turen.')
+        return redirect(url_for('main.show_tours'))
 
-    return render_template('main.book_tour', tour=tour)
+    new_booking = Booking(user_id=current_user.id, tour_id=tour.id)
+    db.session.add(new_booking)
+    db.session.commit()
+    return render_template('payment.html', tour=tour)
 
-@main.route('/my-bookings')
+@main.route('/my-bookings', )
 def user_bookings():
     if 'user' not in session:
         flash('Vennligst logg inn for å se dine bookinger.')
@@ -232,4 +235,31 @@ def user_bookings():
         return redirect(url_for("main.login"))
 
     bookings = Booking.query.filter_by(user_id=current_user.id).all()
-    return render_template('main.my_bookings', bookings=bookings)
+    return render_template('my_bookings.html', bookings=bookings, User=User)
+
+@main.route('/cancel-booking/<int:booking_id>', methods=['POST'])
+def cancel_booking(booking_id):
+    if 'user' not in session:
+        flash('Vennligst logg inn for å kansellere bookinger.')
+        return redirect(url_for("main.login"))
+
+    booking = Booking.query.get_or_404(booking_id)
+    current_user = User.query.filter_by(username=session['user']).first()
+
+    if booking.user_id != current_user.id:
+        flash('Du kan bare kansellere dine egne bookinger.')
+        return redirect(url_for('main.user_bookings'))
+
+    db.session.delete(booking)
+    db.session.commit()
+    flash('Booking kansellert.')
+    return redirect(url_for('main.user_bookings'))
+
+@main.route('/payment/<int:tour_id>', methods=['GET', 'POST'])
+def payment(tour_id):
+    tour = Tour.query.get_or_404(tour_id)
+    print(tour.image_filename)
+    if request.method == 'POST':
+        flash('Betaling vellykket')
+        return redirect(url_for('main.show_tours'))
+    return render_template('payment.html', tour=tour)

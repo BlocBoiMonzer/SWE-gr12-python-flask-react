@@ -3,23 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <title>Mine Bookinger</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .tour-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 20px;
+        }
+        .tour-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+        .tour-card h3 {
+            color: #007bff;
+        }
+        .tour-card p {
+            color: #555;
+            margin: 5px 0;
+        }
+
+        nav {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .cancel-button {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .cancel-button:hover {
+            background-color: #c82333;
+        }
+
+        footer {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
+    <nav>
+        <a href="{{ url_for('main.user') }}">Profile</a>
+        <a href="{{ url_for('main.user_bookings') }}">Dine turer</a>
+        <a href="{{ url_for('main.show_tours') }}">Ledige turer</a>
+        <a href="{{ url_for('main.logout') }}">Logout</a>
+    </nav>
     <h1>Mine Bookinger</h1>
-    {% if bookings %}
-        <ul>
-            {% for booking in bookings %}
-                <li>
-                    Tur: {{ booking.tour.name }} <br>
-                    Beskrivelse: {{ booking.tour.description }} <br>
-                    Dato: {{ booking.tour.start_date }} til {{ booking.tour.end_date }} <br>
-                    Pris: {{ booking.tour.price }} <br>
-                    Booket Dato: {{ booking.booking_date }}
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
+    <div class="tour-container">
+        {% for booking in bookings %}
+        <div class="tour-card">
+            <h3>{{ booking.tour.name }}</h3>
+            <p>{{ booking.tour.description }}</p>
+            <p>Pris: {{ booking.tour.price }}</p>
+            <p>Vert: {{ User.query.get(booking.tour.host_id).username }}</p>
+            <p>Startdato: {{ booking.tour.start_date }}</p>
+            <p>Sluttdato: {{ booking.tour.end_date }}</p>
+            <p>Booket dato: {{ booking.booking_date }}</p>
+            <form method="POST" action="{{ url_for('main.cancel_booking', booking_id=booking.id) }}">
+                <button type="submit" class="cancel-button">Kanseller</button>
+            </form>
+        </div>
+        {% else %}
         <p>Du har ingen bookede turer.</p>
-    {% endif %}
+        {% endfor %}
+    </div>
+    <footer>
+        <p>Gruppe 12 corporation</p>
+    </footer>
 </body>
 </html>

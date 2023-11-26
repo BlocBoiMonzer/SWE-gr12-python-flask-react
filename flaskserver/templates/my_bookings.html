@@ -28,6 +28,7 @@
             padding: 20px;
             width: 300px;
             margin-bottom: 20px;
+            position: relative; /* Added */
         }
         .tour-card img {
             max-width: 60%;
@@ -43,24 +44,35 @@
             color: #555;
             margin: 5px 0;
         }
-
+        .delete-button {
+            background-color: #dc3545 !important;
+            color: white !important;
+            padding: 10px 20px !important;
+            border: none !important;
+            border-radius: 5px !important;
+            cursor: pointer !important;
+            font-size: 16px !important;
+            position: absolute !important;
+            right: 20px !important;
+            top: 20px !important;
+        }
+        .delete-button:hover {
+            background-color: #c82333 !important;
+        }
         nav {
             background-color: #333;
             color: white;
             padding: 15px;
             text-align: center;
         }
-
         nav a {
             color: white;
             margin: 0 15px;
             text-decoration: none;
         }
-
         nav a:hover {
             text-decoration: underline;
         }
-
         .cancel-button {
             background-color: #dc3545;
             color: white;
@@ -73,7 +85,6 @@
         .cancel-button:hover {
             background-color: #c82333;
         }
-
         footer {
             margin-top: 30px;
             padding: 20px;
@@ -107,6 +118,11 @@
             <form method="POST" action="{{ url_for('main.cancel_booking', booking_id=booking.id) }}">
                 <button type="submit" class="cancel-button">Kanseller</button>
             </form>
+            {% if current_user.is_admin %}
+            <form method="POST" action="{{ url_for('main.delete_tour', tour_id=booking.tour.id) }}" style="position: absolute; right: 20px; top: 20px;">
+                <button type="submit" class="delete-button">Slett</button>
+            </form>
+            {% endif %}
         </div>
         {% else %}
         <p>Du har ingen bookede turer.</p>

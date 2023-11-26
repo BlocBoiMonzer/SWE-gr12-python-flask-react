@@ -135,6 +135,11 @@
                 <p>Vert: {{ hosts[tour.id] }}</p>
                 <p>Startdato: {{ tour.start_date }}</p>
                 <p>Sluttdato: {{ tour.end_date }}</p>
+                {% if current_user.is_admin %}
+                <form method="POST" action="{{ url_for('main.delete_tour', tour_id=tour.id) }}">
+                    <button type="submit">Slett</button>
+                </form>
+                {% endif %}
             </div>
             {% endif %}
             {% endfor %}
@@ -157,6 +162,11 @@
                 <p>Startdato: {{ tour.start_date }}</p>
                 <p>Sluttdato: {{ tour.end_date }}</p>
                 <a href="{{ url_for('main.payment', tour_id=tour.id) }}" class="book-button">Book</a>
+                {% if current_user.is_admin %}
+                <form method="POST" action="{{ url_for('main.delete_tour', tour_id=tour.id) }}">
+                    <button type="submit">Slett</button>
+                </form>
+                {% endif %}
             </div>
             {% endif %}
             {% endfor %}

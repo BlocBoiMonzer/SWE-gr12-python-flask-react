@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, request, redirect, session, flash
+from flask import Blueprint, render_template, url_for, request, redirect, session, flash, jsonify
 from flask_login import current_user, login_required
 from models import User, Booking, Tour
 from datetime import datetime
@@ -16,30 +16,29 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 
 
-@main.route("/")
+@main.route("/", methods=["GET", "POST"])
 def home():
     return render_template("index.html")
 
 
 @main.route("/register", methods=["POST", "GET"])
 def register():
-    if request.method == "POST":
-        firstname = request.form["firstname"]
-        lastname = request.form["lastname"]
-        phonenumber = request.form["phonenumber"]
-        address = request.form["address"]
-        email = request.form["email"]
-        username = request.form["username"]
-        password = request.form["password"]
-        
+    if request.is_json:
+        data = request.get_json()
+        firstname = data.get("firstname")
+        lastname = data.get("lastname")
+        phonenumber = data.get("phonenumber")
+        address = data.get("address")
+        email = data.get("email")
+        username = data.get("username")
+        password = data.get("password")
+
         user = User.query.filter_by(username=username).first()
         if user:
-            flash("Username is already taken. Please choose a different username.")
-            return redirect(url_for("main.register"))
+            return jsonify({"error": "Username is already taken. Please choose a different username."}), 400
 
         if User.query.filter_by(email=email).first():
-            flash("Email is already registered. Please choose a different email.")
-            return redirect(url_for("main.register"))
+            return jsonify({"error": "Email is already registered. Please choose a different email."}), 400
 
         user = User(firstname=firstname, lastname=lastname, phonenumber=phonenumber, address=address,
                      email=email, username=username, password=password)
@@ -47,10 +46,10 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        flash("Registration successful! You can now log in.")
-        return redirect(url_for("main.login"))
+        return jsonify({"message": "Registration successful! You can now log in."}), 201
 
-    return render_template("register.html")
+    return jsonify({"error": "The request payload is not in JSON format"}), 400
+
 
 @main.route('/user', methods=['GET', 'POST'])
 def user():

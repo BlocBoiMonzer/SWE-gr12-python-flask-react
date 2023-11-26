@@ -5,6 +5,15 @@ import Navbar from './Navbar';
 // import viteLogo from '/vite.svg'
 import './App.css'
 import TourList from './TourList';
+import UserRegistration from './UserRegistration';
+import HomePage from './HomePage';
+import UserLogin from './UserLogin';
+
+// Placeholder components
+// const Home = () => <h1>Home Page</h1>;
+// const Register = () => <h1>Register Page</h1>;
+// const Login = () => <h1>Login Page</h1>;
+const User = () => <h1>User Page</h1>;
 
 function App() {
   // my code to test the api
@@ -28,26 +37,14 @@ function App() {
     <BrowserRouter>
       <Navbar/>
       <Routes>
+      
+          <Route path='/' element={<HomePage />} />
+          <Route path='/register' element={<UserRegistration />} />
+          <Route path='/login' element={<UserLogin />} />
+          <Route path='/user' element={<User />} />
+          <Route path='/tours' element={<TourList />} />
 
-        <Route path='/'>
 
-        </Route>
-
-        <Route path='register'>
-
-        </Route>
-        
-        <Route path='/login'>
-          
-        </Route>
-
-        <Route path='/user'>
-          
-        </Route>
-
-        <Route path='/tours'>
-          <TourList />
-        </Route>
       </Routes>
     </BrowserRouter>
 

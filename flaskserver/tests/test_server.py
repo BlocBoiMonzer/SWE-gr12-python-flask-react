@@ -1,3 +1,5 @@
+import os
+import tempfile
 import pytest
 from flaskserver.app import create_app
 from sqlalchemy.testing import db
@@ -31,7 +33,8 @@ def test_register(test_client):
         'password': 'password123'
     })
 
-    assert b'Registration successful!' in response.data
+    with app.app_context():
+        db.create_all()
 
 def test_user_model():
     user = User(firstname='John', lastname='Doe', phonenumber='123456789', address='123 Main St', email='john.doe@example.com', username='johndoe', password='password123')

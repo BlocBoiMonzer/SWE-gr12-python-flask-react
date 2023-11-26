@@ -1,7 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+
+// typescript activities lol
+interface Tour {
+  id: number;
+  name: string;
+  description: string;
+}
 
 function TourList() {
-  const [tours, setTours] = useState([]);
+  const [tours, setTours] = useState<Tour[]>([]); // Use the Tour type here
 
   useEffect(() => {
     fetch('http://localhost:3000/tours')

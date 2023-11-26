@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Betalingside</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .payment-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .payment-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .payment-button:hover {
+            background-color: #0056b3;
+        }
+        .payment-image {
+            width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Betalingside</h1>
+    <div class="payment-container">
+        <img class="payment-image" src="{{ url_for('static', filename='uploads/' + tour.image_filename) if tour.image_filename else url_for('static', filename='default.jpg') }}" alt="Tour Image">
+        <form method="POST" action="{{ url_for('main.payment', tour_id=tour.id) }}">
+            <img class="payment-image" src="{{ url_for('static', filename='uploads/visa_mastercard.jpg') }}" alt="Card">
+            <button type="submit" class="payment-button">Betal med kort</button>
+        </form>
+        <form method="POST" action="{{ url_for('main.payment', tour_id=tour.id) }}">
+            <img class="payment-image" src="{{ url_for('static', filename='uploads/Paypal.png') }}" alt="PayPal">
+            <button type="submit" class="payment-button">Betal med PayPal</button>
+        </form>
+        <form method="POST" action="{{ url_for('main.payment', tour_id=tour.id) }}">
+            <img class="payment-image" src="{{ url_for('static', filename='uploads/vipps.png') }}" alt="Vipps">
+            <button type="submit" class="payment-button">Betal med Vipps</button>
+        </form>
+        <form method="POST" action="{{ url_for('main.payment', tour_id=tour.id) }}">
+            <img class="payment-image" src="{{ url_for('static', filename='uploads/Wire-transfer-.jpg') }}" alt="Wire Transfer">
+            <button type="submit" class="payment-button">Betal med bankoverføring</button>
+        </form>
+    </div>
+</body>
+</html>

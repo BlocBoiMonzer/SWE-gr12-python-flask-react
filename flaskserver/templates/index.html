@@ -3,46 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f0f0f0;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
+            margin: 20px;
             padding: 20px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
         }
-        h1 {
+
+        h2 {
             color: #333;
         }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
+
+        form {
+            max-width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
             border-radius: 5px;
-            margin: 10px;
-            font-weight: bold;
+            background-color: #f9f9f9;
         }
-        .header-image {
-            max-width: 100%;
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            color: red;
+        }
+
+        p {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <img class="header-image" src="https://image.jimcdn.com/app/cms/image/transf/none/path/sa6549607c78f5c11/image/ia75200d7d26d4766/version/1463569446/nice-france.jpg" alt="Lokale reiser bilde">
-        <h1>Lokale Reise App</h1>
-        <p>Utforsk spennende reisemål i ditt nærområde!</p>
-        <a class="btn" href="login">Logg inn</a>
-        <a class="btn" href="register">Registrer</a>
-    </div>
+    <h2>Login Page</h2>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form method="post" action="{{ url_for('main.login') }}">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+    
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+    
+        <button type="submit">Login</button>
+    </form>
+
+    <form method="post" action="{{ url_for('main.login_admin') }}">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Logg inn som admin</button>
+    </form>
+
+    {% if "user" in session %}
+        <p>You are already logged in as {{ session["user"] }}. <a href="{{ url_for('main.user') }}">Go to Home Page</a></p>
+    {% endif %}
+
+    <p>Klikk her for å gå tilbake til <a href="{{ url_for('main.home') }}">hjemmesiden</a>.</p>
 </body>
 </html>

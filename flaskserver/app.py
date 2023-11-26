@@ -3,6 +3,7 @@ from flaskserver.config import Config
 from flask_login import LoginManager
 from flaskserver.extensions import db, migrate
 from models import User
+from flask_cors import CORS
 
 def create_app(config_class=Config):
     app = Flask(__name__)

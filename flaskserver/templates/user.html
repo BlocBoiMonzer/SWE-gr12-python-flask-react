@@ -11,7 +11,7 @@
             padding: 0;
             background-color: #f4f4f4;
             color: #333;
-            text-align: center; /* Sentrerer all tekst */
+            text-align: center;
         }
 
         nav {
@@ -91,8 +91,8 @@
 </head>
 <body>
     <nav>
-        <a href="{{ url_for('main.home') }}">Home</a>
         <a href="{{ url_for('main.user') }}">Profile</a>
+        <a href="{{ url_for('main.user_bookings') }}">Dine turer</a>
         <a href="{{ url_for('main.show_tours') }}">Ledige turer</a>
         <a href="{{ url_for('main.logout') }}">Logout</a>
     </nav>
@@ -116,12 +116,7 @@
         </section>
     </main>
     <footer>
-        <p>&copy; 2022 Your Company Name. All rights reserved.</p>
-        <nav>
-            <a href="{{ url_for('main.home') }}">Home</a> |
-            <a href="{{ url_for('main.user') }}">Profile</a> |
-            <a href="{{ url_for('main.logout') }}">Logout</a>
-        </nav>
+        <p>Gruppe 12 corporation</p>
     </footer>
 </body>
 </html>

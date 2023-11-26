@@ -130,18 +130,17 @@ def display_image(filename):
 def login():
     if request.method == "POST":
         session.permanent = True
-        username = request.form["username"]
-        password = request.form["password"]
+        data = request.get_json()
+        username = data.get("username")
+        password = data.get("password")
         user = User.query.filter_by(username=username, password=password).first()
 
         if user:
             session["user"] = username
-            flash("Du har blitt logget inn!")
-            return redirect(url_for("main.user")) 
+            return jsonify({"message": "Du har blitt logget inn!"}), 200
 
         else:
-            flash("Feil brukernavn eller passord. Prøv igjen.", "error")
-            return redirect(url_for("main.login"))
+            return jsonify({"error": "Feil brukernavn eller passord. Prøv igjen."}), 400
 
     return render_template("login.html")
 

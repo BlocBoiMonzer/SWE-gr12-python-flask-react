@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './UserLogin.css'; // Import the CSS file
 import Button from './Button';
 
@@ -6,9 +7,10 @@ const UserLogin: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleLogin = () => {
-    // Perform login logic here, e.g. make a POST request to the server with username and password
+    // login logic here, makes a POST request to the server with username and password
     fetch('http://localhost:3000/login', {
       method: 'POST',
       headers: {
@@ -25,7 +27,7 @@ const UserLogin: React.FC = () => {
       .then((data) => {
         // Handle successful login, e.g. store user data in session
         sessionStorage.setItem('user', JSON.stringify(data));
-        // Redirect to the user page or perform other actions
+        navigate('/user'); // Redirect to user page
       })
       .catch((error) => {
         setError(`Innlogging feilet. Feil brukernavn eller passord. Error: ${error.message}`);
@@ -34,6 +36,7 @@ const UserLogin: React.FC = () => {
 
   return (
     <div>
+      <h1>Login</h1>
       <input
         type="text"
         placeholder="Username"

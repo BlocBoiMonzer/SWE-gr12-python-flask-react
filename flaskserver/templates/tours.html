@@ -131,23 +131,6 @@
                 {% else %}
                 {% endif %}
                 <p>{{ tour.description }}</p>
-                <p>Pris: {{ tour.price }}</p>
-                <p>Vert: {{ hosts[tour.id] }}</p>
-                <p>Startdato: {{ tour.start_date }}</p>
-                <p>Sluttdato: {{ tour.end_date }}</p>
-            </div>
-            {% endif %}
-            {% endfor %}
-        </div>
-    </div>
-    <div class="tour-section">
-        <h2>Andre Reiser</h2>
-        <div class="tour-container">
-            {% for tour in tours %}
-            {% if tour.host_id != current_user.id %}
-            <div class="tour-card" id="tour-{{ tour.id }}">
-                {% if tour.image_filename %}
-                    <img src="{{ url_for('static', filename='uploads/' + tour.image_filename) }}" alt="Tour image" style="width: 100%; height: auto;">
                 {% else %}
                 {% endif %}
                 <h3>{{ tour.name }}</h3>

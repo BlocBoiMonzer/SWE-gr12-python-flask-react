@@ -5,6 +5,8 @@ from datetime import datetime
 from extensions import db
 from werkzeug.utils import secure_filename
 import os
+from flask import current_app
+from config import Config
 
 
 main = Blueprint('main', __name__)
@@ -114,7 +116,9 @@ def upload_image():
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        file.save(os.path.join(UPLOAD_FOLDER, filename))
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+            os.makedirs(app.config['UPLOAD_FOLDER'])
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         current_user.image_filename = filename
         db.session.commit()
         flash('Profilbilde er oppdatert.')
@@ -165,7 +169,6 @@ def show_tours():
         flash('Noe gikk galt, kunne ikke finne bruker.')
         return redirect(url_for("main.login"))
 
-    # Get all tours that are not booked by the current user
     booked_tours = [booking.tour_id for booking in current_user.bookings]
     tours = Tour.query.filter(Tour.id.notin_(booked_tours)).all()
 
@@ -196,7 +199,7 @@ def create_tour():
         else:
             flash('Tillatte bildetyper er - png, jpg, jpeg, gif')
             return redirect(request.url)
-        
+
         current_user = User.query.filter_by(username=session['user']).first()
         new_tour = Tour(
             name=name,

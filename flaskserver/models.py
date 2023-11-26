@@ -12,8 +12,6 @@ class User(db.Model):
     password = db.Column("password", db.String(100), nullable=False)
     bookings = db.relationship('Booking', backref='user_bookings', lazy=True)
     image_filename = db.Column(db.String(120), nullable=True)
-    is_admin = db.Column(db.Boolean, default=False)
-    
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

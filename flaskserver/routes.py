@@ -172,7 +172,7 @@ def show_tours():
     booked_tours = [booking.tour_id for booking in current_user.bookings]
     tours = Tour.query.filter(Tour.id.notin_(booked_tours)).all()
 
-    hosts = {tour.id: User.query.get(tour.host_id).username for tour in tours}
+    hosts = {tour.id: User.query.get(tour.host_id).username for tour in tours if User.query.get(tour.host_id) is not None}
     return render_template('tours.html', tours=tours, hosts=hosts, User=User, current_user=current_user)
 
 @main.route('/create_tour', methods=['GET', 'POST'])
@@ -286,3 +286,16 @@ def payment(tour_id):
         flash('Betaling vellykket', 'success')
         return redirect(url_for('main.show_tours'))
     return render_template('payment.html', tour=tour)
+
+@main.route('/delete_tour/<int:tour_id>', methods=['POST'])
+def delete_tour(tour_id):
+    if 'user' not in session:
+        flash('Vennligst logg inn for å slette turer.')
+        return redirect(url_for("main.login"))
+
+    current_user = User.query.filter_by(username=session['user']).first()
+    if current_user is None or not current_user.is_admin:
+        flash('Bare admin-brukere kan slette turer.')
+        return redirect(url_for("main.login"))
+
+

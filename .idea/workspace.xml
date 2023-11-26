@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5cda4984-fb48-4b19-b432-2aa817be6271" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/SWE-gr12-python-flask-react.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SWE-gr12-python-flask-react.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flaskserver/instance/database.db" beforeDir="false" afterPath="$PROJECT_DIR$/flaskserver/instance/database.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flaskserver/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/flaskserver/routes.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

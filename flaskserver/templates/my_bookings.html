@@ -29,6 +29,13 @@
             width: 300px;
             margin-bottom: 20px;
         }
+        .tour-card img {
+            max-width: 60%;
+            max-height: 60%px;
+            object-fit: cover;
+            display: block;
+            margin: auto;
+        }
         .tour-card h3 {
             color: #007bff;
         }
@@ -87,6 +94,9 @@
     <div class="tour-container">
         {% for booking in bookings %}
         <div class="tour-card">
+            {% if booking.tour.image_filename %}
+                <img src="{{ url_for('static', filename='uploads/' + booking.tour.image_filename) }}" alt="Tour image">
+            {% endif %}
             <h3>{{ booking.tour.name }}</h3>
             <p>{{ booking.tour.description }}</p>
             <p>Pris: {{ booking.tour.price }}</p>

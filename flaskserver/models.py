@@ -10,7 +10,7 @@ class User(db.Model):
     email = db.Column("email", db.String(100))
     username = db.Column("username", db.String(50), unique=True, nullable=False)
     password = db.Column("password", db.String(100), nullable=False)
-    bookings = db.relationship('Booking', backref='booking_user', lazy='dynamic')
+    bookings = db.relationship('Booking', backref='user_bookings', lazy=True)
     image_filename = db.Column(db.String(120), nullable=True)
 
 class Booking(db.Model):
@@ -20,6 +20,7 @@ class Booking(db.Model):
     booking_date = db.Column(db.DateTime, default=datetime.utcnow)
     user = db.relationship('User', backref='user_bookings')
     tour = db.relationship('Tour', backref='tour_bookings')
+    paid = db.Column(db.Boolean, default=False)
 
 class Tour(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -1,6 +1,8 @@
 import pytest
+
 from flaskserver import create_app
-from models import User, Booking, Tour
+from configparser import ConfigParser
+
 
 @pytest.fixture
 def app():

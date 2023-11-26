@@ -5,7 +5,7 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 import os
 from config import Config
-
+from configparser import ConfigParser
 
 main = Blueprint('main', __name__)
 
@@ -321,3 +321,7 @@ def create_admin_user():
         admin = User(username='admin', password='admin', is_admin=True)
         db.session.add(admin)
         db.session.commit()
+
+
+def create_app():
+    return None

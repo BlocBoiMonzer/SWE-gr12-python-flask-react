@@ -32,3 +32,7 @@ class Tour(db.Model):
     end_date = db.Column(db.Date, nullable=False)
     host_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     image_filename = db.Column(db.String(100), nullable=True)
+
+
+def db():
+    return None

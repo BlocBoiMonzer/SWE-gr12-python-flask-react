@@ -1,17 +1,16 @@
-from flask import Blueprint, render_template, url_for, request, redirect, session, flash, jsonify
+from flask import Blueprint, render_template, url_for, request, redirect, session, flash, jsonify, current_app
 from flask_login import current_user, login_required
-from models import User, Booking, Tour
+from models import User, Booking, Tour, db
 from datetime import datetime
 from extensions import db
 from werkzeug.utils import secure_filename
 import os
-from flask import current_app
 from config import Config
 
 
 main = Blueprint('main', __name__)
 
-UPLOAD_FOLDER = os.path.join('flaskserver', 'static', 'uploads')
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 
@@ -115,9 +114,9 @@ def upload_image():
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        if not os.path.exists(app.config['UPLOAD_FOLDER']):
-            os.makedirs(app.config['UPLOAD_FOLDER'])
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if not os.path.exists(UPLOAD_FOLDER):
+            os.makedirs(UPLOAD_FOLDER)
+        file.save(os.path.join(UPLOAD_FOLDER, filename))
         current_user.image_filename = filename
         db.session.commit()
         flash('Profilbilde er oppdatert.')
@@ -162,8 +161,11 @@ def show_tours():
     if 'user' not in session:
         flash('Vennligst logg inn for å se turer.')
         return redirect(url_for("main.login"))
+    booked_tours = [booking.tour_id for booking in current_user.bookings]
+    tours = Tour.query.filter(Tour.id.notin_(booked_tours)).all()
 
-
+    hosts = {tour.id: (User.query.get(tour.host_id).username if User.query.get(tour.host_id) else '') for tour in tours}
+    return render_template('tours.html', tours=tours, hosts=hosts, User=User, current_user=current_user)
 
 @main.route('/create_tour', methods=['GET', 'POST'])
 def create_tour():
@@ -287,5 +289,36 @@ def delete_tour(tour_id):
     if current_user is None or not current_user.is_admin:
         flash('Bare admin-brukere kan slette turer.')
         return redirect(url_for("main.login"))
+    tour = Tour.query.get_or_404(tour_id)
+    Booking.query.filter_by(tour_id=tour.id).delete()
+    db.session.delete(tour)
+    db.session.commit()
+    flash('Tur slettet.')
+    return redirect(url_for('main.show_tours'))
+    
+    
+@main.route("/login_admin", methods=["POST", "GET"])
+def login_admin():
+    if request.method == "POST":
+        session.permanent = True
+        username = request.form.get("username")
+        password = request.form.get("password")
+        user = User.query.filter_by(username=username, password=password, is_admin=True).first()
 
+        if user:
+            session["user"] = username
+            flash("Du har blitt logget inn som admin!")
+            return redirect(url_for("main.user")) 
 
+        else:
+            flash("Feil brukernavn eller passord, eller du er ikke en admin. Prøv igjen.", "error")
+            return redirect(url_for("main.login_admin"))
+
+    return render_template("login.html")    
+
+def create_admin_user():
+    admin = User.query.filter_by(username='admin').first()
+    if not admin:
+        admin = User(username='admin', password='admin', is_admin=True)
+        db.session.add(admin)
+        db.session.commit()

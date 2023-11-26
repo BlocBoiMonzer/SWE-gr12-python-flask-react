@@ -88,16 +88,6 @@
         <button type="submit">Login</button>
     </form>
 
-    <form method="post" action="{{ url_for('main.login_admin') }}">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-
-        <button type="submit">Logg inn som admin</button>
-    </form>
-
     {% if "user" in session %}
         <p>You are already logged in as {{ session["user"] }}. <a href="{{ url_for('main.user') }}">Go to Home Page</a></p>
     {% endif %}

@@ -20,7 +20,8 @@ That path is just an example. You can simple right click the folder and open Com
 3. Install the required Python dependencies with `pip install -r requirements.txt`.
 4. Install Node.js and npm if they are not already installed. You can download them from [here](https://nodejs.org/en/download/).
 5. Navigate to the React.js directory `SWE-gr12-python-flask-react/client`.
-5. Install the required Node.js dependencies with `npm install`.
+6. Install the required Node.js dependencies with `npm install`.
+7. Install Jest and React Testing Library for testing React components: `npm install --save-dev jest @testing-library/react @types/jest`
 
 ## Running the Application
 
@@ -29,6 +30,19 @@ That path is just an example. You can simple right click the folder and open Com
 3. Navigate to port `http://localhost:5173/` and use the app through that link
 
 Tada
+
+## Running the Tests
+
+1. Run your tests with the `jest` command. If you want to run tests whenever a file changes, you can use the `--watch` flag: `npx jest --watch`
+2. Add a `jest` script in your `package.json` file if it's not there, but it should be: 
+
+json
+"scripts": {
+"test": "jest"
+}
+
+3. Now you can run your tests with `npm test`.
+
 
 ## Contribution
 

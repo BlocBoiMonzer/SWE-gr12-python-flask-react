@@ -34,7 +34,6 @@
     "eslint-plugin-react-refresh": "^0.4.3",
     "jest": "^29.7.0",
     "jest-css-modules": "^2.1.0",
-    "jest-environment-jsdom": "^29.7.0",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
   },
@@ -45,5 +44,8 @@
     "moduleNameMapper": {
       "\\.(css|less|scss|sss|styl)$": "<rootDir>/node_modules/jest-css-modules"
     }
+  },
+  "compilerOptions": {
+    "types": ["jest", "node"]
   }
 }

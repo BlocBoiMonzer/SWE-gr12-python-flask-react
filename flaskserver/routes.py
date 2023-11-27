@@ -159,17 +159,13 @@ def logout():
 @main.route('/show-tours')
 def show_tours():
     if 'user' not in session:
-        flash('Vennligst logg inn for å se turer.')
-        return redirect(url_for("main.login"))
+        return jsonify({"error": "Please log in to view tours."}), 401
+
+    current_user = User.query.filter_by(username=session['user']).first()
     booked_tours = [booking.tour_id for booking in current_user.bookings]
     tours = Tour.query.filter(Tour.id.notin_(booked_tours)).all()
 
-    hosts = {tour.id: User.query.get(tour.host_id).username for tour in tours}
-
-    if request.headers.get('Accept') == 'application/json':
-        return jsonify([{'id': tour.id, 'name': tour.name, 'description': tour.description} for tour in tours])
-    else:
-        return render_template('tours.html', tours=tours, current_user=current_user)
+    return jsonify([{'id': tour.id, 'name': tour.name, 'description': tour.description} for tour in tours]), 200
 
 @main.route('/create_tour', methods=['GET', 'POST'])
 def create_tour():

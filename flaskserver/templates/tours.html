@@ -109,18 +109,28 @@
 </head>
 <body>
     <nav>
-        <a href="{{ url_for('main.user') }}">Profile</a>
+        <a href="{{ url_for('main.user') }}">Profil</a>
         <a href="{{ url_for('main.user_bookings') }}">Dine turer</a>
         <a href="{{ url_for('main.show_tours') }}">Ledige turer</a>
-        <a href="{{ url_for('main.logout') }}">Logout</a>
+        <a href="{{ url_for('main.logout') }}">Logg ut</a>
     </nav>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 
     <h1>Tilgjengelige Reiser</h1>
 
     <a href="{{ url_for('main.create_tour') }}" class="create-tour-button">Opprett Ny Reise</a>
 
     <div class="tour-section">
-        <h2>Mine Reiser</h2>
+        <h2>Mine Opprettede Reiser</h2>
         <div class="tour-container">
             {% for tour in tours %}
             {% if tour.host_id == current_user.id %}

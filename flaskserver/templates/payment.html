@@ -39,6 +39,15 @@
     </style>
 </head>
 <body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
     <h1>Betalingside</h1>
     <div class="payment-container">
         <img class="payment-image" src="{{ url_for('static', filename='uploads/' + tour.image_filename) if tour.image_filename else url_for('static', filename='default.jpg') }}" alt="Tour Image">

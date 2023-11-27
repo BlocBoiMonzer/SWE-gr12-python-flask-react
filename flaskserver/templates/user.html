@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>Bruker Profil</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -91,32 +91,40 @@
 </head>
 <body>
     <nav>
-        <a href="{{ url_for('main.user') }}">Profile</a>
+        <a href="{{ url_for('main.user') }}">Profil</a>
         <a href="{{ url_for('main.user_bookings') }}">Dine turer</a>
         <a href="{{ url_for('main.show_tours') }}">Ledige turer</a>
-        <a href="{{ url_for('main.logout') }}">Logout</a>
+        <a href="{{ url_for('main.logout') }}">Logg ut</a>
     </nav>
-
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
     <header>
-        <h1>Welcome, {{ user.username }}!</h1>
+        <h1>Velkommen {{ user.username }}!</h1>
     </header>
     <main>
         <section>
-            <h2>Profile Picture</h2>
+            <h2>Profilbilde</h2>
             {% if user.image_filename %}
                 <img src="{{ url_for('static', filename='uploads/' + user.image_filename) }}" alt="Profile Picture">
                 <p>{{ user.image_filename }}</p>
             {% else %}
-                <p>No profile picture uploaded.</p>
+                <p>Ingen Profilbilde opplastet</p>
             {% endif %}
             <form method="post" action="{{ url_for('main.upload_image') }}" enctype="multipart/form-data">
                 <input type="file" name="image">
-                <button type="submit">Upload New Picture</button>
+                <button type="submit">Last opp bilde</button>
             </form>
         </section>
     </main>
     <footer>
-        <p>Gruppe 12 corporation</p>
+        <p>Gruppe 12</p>
     </footer>
 </body>
 </html>

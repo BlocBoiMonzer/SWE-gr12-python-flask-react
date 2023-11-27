@@ -96,11 +96,20 @@
 </head>
 <body>
     <nav>
-        <a href="{{ url_for('main.user') }}">Profile</a>
+        <a href="{{ url_for('main.user') }}">Profil</a>
         <a href="{{ url_for('main.user_bookings') }}">Dine turer</a>
         <a href="{{ url_for('main.show_tours') }}">Ledige turer</a>
-        <a href="{{ url_for('main.logout') }}">Logout</a>
+        <a href="{{ url_for('main.logout') }}">Logg ut</a>
     </nav>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
     <h1>Mine Bookinger</h1>
     <div class="tour-container">
         {% for booking in bookings %}
@@ -129,7 +138,7 @@
         {% endfor %}
     </div>
     <footer>
-        <p>Gruppe 12 corporation</p>
+        <p>Gruppe 12</p>
     </footer>
 </body>
 </html>

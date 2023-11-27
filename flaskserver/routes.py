@@ -288,5 +288,3 @@ def delete_tour(tour_id):
     if current_user is None or not current_user.is_admin:
         flash('Bare admin-brukere kan slette turer.')
         return redirect(url_for("main.login"))
-
-

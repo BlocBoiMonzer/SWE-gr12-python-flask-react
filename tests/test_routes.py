@@ -61,7 +61,6 @@ def test_register_new_user(client):
     assert response.status_code == 201
     assert b"Registration successful!" in response.data
 
-# ... (other tests remain unchanged)
 
 def test_user_page(client):
     with client.session_transaction() as session:

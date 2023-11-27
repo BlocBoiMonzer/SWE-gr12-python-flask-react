@@ -9,6 +9,8 @@ import UserRegistration from './UserRegistration';
 import HomePage from './HomePage';
 import UserLogin from './UserLogin';
 import UserProfile from './UserProfile';
+import Logout from './Logout';
+
 
 // Placeholder components
 // const Home = () => <h1>Home Page</h1>;
@@ -44,6 +46,7 @@ function App() {
           <Route path='/login' element={<UserLogin />} />
           <Route path='/user' element={<UserProfile />} />
           <Route path='/tours' element={<TourList />} />
+          <Route path='/logout' element={<Logout />} />
 
 
       </Routes>

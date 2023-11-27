@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import Footer from './Footer';
+import SingleTour from './SingleTour'; // Import the SingleTour component
 
-// typescript activities lol
+// Typescript being typescript lol
 interface Tour {
   id: number;
   name: string;
@@ -12,19 +14,22 @@ function TourList() {
 
   useEffect(() => {
     fetch('http://localhost:3000/tours')
-      .then(response => response.json())
-      .then(data => setTours(data));
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => setTours(data))
+      .catch(error => console.log('Fetch error: ', error));
   }, []);
 
   return (
     <div>
       {tours.map(tour => (
-        <div key={tour.id}>
-          <h2>{tour.name}</h2>
-          <p>{tour.description}</p>
-          <p>hello world</p>
-        </div>
+        <SingleTour tour={tour} /> 
       ))}
+      <Footer></Footer>
     </div>
   );
 }

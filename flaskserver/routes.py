@@ -137,7 +137,7 @@ def login():
 
         if user:
             session["user"] = username
-            return jsonify({"message": "Du har blitt logget inn!"}), 200
+            return jsonify({"message": "Du har blitt logget inn!", "username": username}), 200
 
         else:
             return jsonify({"error": "Feil brukernavn eller passord. Prøv igjen."}), 400
@@ -158,7 +158,11 @@ def show_tours():
         return redirect(url_for("main.login"))
     current_user = User.query.filter_by(username=session['user']).first()
     tours = Tour.query.filter_by(host_id=current_user.id).all()
-    return render_template('tours.html', tours=tours, current_user=current_user)
+
+    if request.headers.get('Accept') == 'application/json':
+        return jsonify([{'id': tour.id, 'name': tour.name, 'description': tour.description} for tour in tours])
+    else:
+        return render_template('tours.html', tours=tours, current_user=current_user)
 
 @main.route('/create_tour', methods=['GET', 'POST'])
 def create_tour():

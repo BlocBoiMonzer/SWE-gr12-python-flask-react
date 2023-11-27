@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './UserProfile.css';
+import Footer from './Footer';
 
 interface User {
   username: string;
@@ -21,10 +22,13 @@ const UserProfile = () => {
     console.log(event.target.files);
   };
 
+  
   if (!user) {
     return <p>Loading...</p>;
   }
 
+  console.log(user.username + " lolll")
+  // FIX THIS USERNAME DISPLAYING ISSUE
   return (
     <div>
       <header>
@@ -49,14 +53,7 @@ const UserProfile = () => {
         </section>
       </main>
 
-      <footer>
-        <p>&copy; 2023 Gruppe 12. All rights reserved.</p>
-        <nav>
-          <a href="/">Home</a> |
-          <a href="/profile">Profile</a> |
-          <a href="/logout">Logout</a>
-        </nav>
-      </footer>
+      <Footer></Footer>
     </div>
   );
 };

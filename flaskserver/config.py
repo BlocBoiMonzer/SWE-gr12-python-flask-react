@@ -5,4 +5,3 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = "hadi"
     PERMANENT_SESSION_LIFETIME = timedelta(days=5)
-    UPLOAD_FOLDER = 'C:\\Users\\abdul\\OneDrive\\Documents\\software_engineering\\SWE-gr12-python-flask-react\\flaskserver\\static\\uploads'

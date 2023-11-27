@@ -1,11 +1,12 @@
+from datetime import timedelta
+
 from flask import Flask
 from flask_cors import CORS
-from config import Config
 from flask_login import LoginManager
 from extensions import db, migrate
 from models import User
 
-def create_app(config_class=Config):
+def create_app(database_uri="sqlite://"):
     app = Flask(__name__)
     CORS(app, supports_credentials=True)
     app.config.from_object(config_class)

@@ -4,19 +4,33 @@
 
 In this project, we set out to kill all competition with our amazing software engineering and testing skills that we definitely didn't just use GPT-4 for... (for school reasons, this is a joke)
  
-### Installation
+ ## Prerequisites
 
-Simply clone the repo to your desired location on your computer. Then run 
+- Python
+- Node.js
+- npm
 
+## Installation
+
+1. Clone the repository to your local machine.
+2. Navigate to the project directory.
 `cd C:\Users\YourUsername\Documents\Example\SWE-gr12-python-flask-react`
 That path is just an example. You can simple right click the folder and open Command prompt or Powershell straight into the folder.
 
-Then
-`pip install -r requirements.txt`
+3. Install the required Python dependencies with `pip install -r requirements.txt`.
+4. Install Node.js and npm if they are not already installed. You can download them from [here](https://nodejs.org/en/download/).
+5. Navigate to the React.js directory `SWE-gr12-python-flask-react/client`.
+5. Install the required Node.js dependencies with `npm install`.
+
+## Running the Application
+
+1. Start the Flask server.
+2. Start the React development server with `npm run dev`.
+3. Navigate to port `http://localhost:5173/` and use the app through that link
 
 Tada
 
-### Contribution
+## Contribution
 
 If you want to work with us, instead of working directly on the main branch, 
 

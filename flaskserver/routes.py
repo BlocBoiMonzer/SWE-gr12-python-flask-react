@@ -135,18 +135,17 @@ def display_image(filename):
 def login():
     if request.method == "POST":
         session.permanent = True
-        username = request.form["username"]
-        password = request.form["password"]
+        data = request.get_json()
+        username = data.get("username")
+        password = data.get("password")
         user = User.query.filter_by(username=username, password=password).first()
 
         if user:
             session["user"] = username
-            flash("Du har blitt logget inn!")
-            return redirect(url_for("main.user")) 
+            return jsonify({"message": "Du har blitt logget inn!", "username": username}), 200
 
         else:
-            flash("Feil brukernavn eller passord. Prøv igjen.", "error")
-            return redirect(url_for("main.login"))
+            return jsonify({"error": "Feil brukernavn eller passord. Prøv igjen."}), 400
 
     return render_template("login.html")
 
@@ -166,7 +165,11 @@ def show_tours():
     tours = Tour.query.filter(Tour.id.notin_(booked_tours)).all()
 
     hosts = {tour.id: User.query.get(tour.host_id).username for tour in tours}
-    return render_template('tours.html', tours=tours, hosts=hosts, User=User, current_user=current_user)
+
+    if request.headers.get('Accept') == 'application/json':
+        return jsonify([{'id': tour.id, 'name': tour.name, 'description': tour.description} for tour in tours])
+    else:
+        return render_template('tours.html', tours=tours, hosts=hosts, User=User, current_user=current_user)
 
 @main.route('/create_tour', methods=['GET', 'POST'])
 def create_tour():

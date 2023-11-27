@@ -1,9 +1,7 @@
 import pytest
-from flask import Flask, session
+
 from sqlalchemy.testing import db
-
 from flaskserver.server import app
-
 
 @pytest.fixture
 def client():

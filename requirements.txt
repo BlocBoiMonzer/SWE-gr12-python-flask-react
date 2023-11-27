@@ -6,3 +6,8 @@ Flask-Migrate==4.0.5
 pytest==7.4.3
 flask_cors==4.0.0
 pip==23.3.1
+SQLAlchemy~=2.0.23
+extensions~=0.4
+MyApplication~=0.1.0
+werkzeug~=3.0.1
+alembic~=1.12.1

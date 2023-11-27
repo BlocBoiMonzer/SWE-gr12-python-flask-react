@@ -27,7 +27,7 @@ function TourList() {
   return (
     <div>
       {tours.map(tour => (
-        <SingleTour tour={tour} /> 
+        <SingleTour key={tour.id} tour={tour} /> 
       ))}
       <Footer></Footer>
     </div>

@@ -1,19 +1,14 @@
-from datetime import timedelta
-
 from flask import Flask
 from flask_cors import CORS
+from config import Config
 from flask_login import LoginManager
 from extensions import db, migrate
 from models import User
 
-def create_app(database_uri="sqlite://"):
+def create_app(config_class=Config):
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["SECRET_KEY"] = "hadi"
-    app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=5)
-
-    CORS(app)
+    CORS(app, supports_credentials=True)
+    app.config.from_object(config_class)
 
     db.init_app(app)
     migrate.init_app(app, db)

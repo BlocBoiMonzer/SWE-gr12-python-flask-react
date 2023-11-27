@@ -13,7 +13,7 @@ function TourList() {
   const [tours, setTours] = useState<Tour[]>([]); // Use the Tour type here
 
   useEffect(() => {
-    fetch('http://localhost:3000/tours')
+    fetch('http://localhost:3000/tours', { credentials: 'include' }) // Include credentials
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -27,7 +27,7 @@ function TourList() {
   return (
     <div>
       {tours.map(tour => (
-        <SingleTour tour={tour} /> 
+        <SingleTour key={tour.id} tour={tour} /> 
       ))}
       <Footer></Footer>
     </div>
